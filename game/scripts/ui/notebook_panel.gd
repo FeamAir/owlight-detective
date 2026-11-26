@@ -140,7 +140,8 @@ func _codes() -> void:
 				txt = ", ".join(parts)
 			"ticket":
 				var v := Game.data.values("PZ-GATE-03", Game.state.difficulty)
-				var dur := "%d:%02d" % [int(v.get("duration_min", 0)) / 60, int(v.get("duration_min", 0)) % 60]
+				var dm := ClockLockLogic.duration(v)
+				var dur := "%d:%02d" % [dm / 60, dm % 60]
 				txt = Game.t("code.ticket.fmt", {"departure": v.get("departure", ""), "duration": dur})
 		rows.append("%s: %s" % [Game.t(c.get("title", id)), txt])
 	_list(rows)
@@ -166,12 +167,6 @@ func _signs() -> void:
 func _solved() -> void:
 	var rows: Array = []
 	for pz in Game.state.solved_order:
-		var ln: String = Game.data.node(pz).get("logic_line", "")
-		var params := {}
-		if pz == "PZ-GATE-01":
-			params = CodeLockLogic.logic_params(Game.data.values(pz, Game.state.difficulty), Game.lang(), Game.data)
-		elif pz == "PZ-GATE-02":
-			var words: Dictionary = Game.data.values(pz, Game.state.difficulty).get("rain_end_words", {})
-			params = {"rain_end_words": words.get(Game.lang(), "")}
-		rows.append("%s: %s" % [pz, Game.line(ln, params)])
+		var text := PuzzleRules.logic_text(pz, Game.state.difficulty, Game.lang(), Game.data)
+		rows.append("%s: %s" % [Game.t("pz.title." + pz), text])
 	_list(rows)

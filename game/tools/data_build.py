@@ -83,6 +83,7 @@ def load_all(rep: Report) -> dict:
         "strings": load_yaml("ui/strings.yaml")["strings"],
         "values": {"test": values_test, "release": values_release},
         "difficulty_profile": load_yaml("difficulty_profile.yaml"),
+        "layouts": load_yaml("puzzles/layouts.yaml") or {},
     }
     data["nodes"] = by_id(data["progression"]["nodes"], "id", "progression.nodes", rep)
     return data
@@ -307,7 +308,7 @@ def check_references(d: dict, rep: Report) -> None:
             rep.err(f"{w}: unknown hotspot {n['hotspot']}")
         if n.get("kind") == "puzzle" and n.get("location") not in d["locations"]:
             rep.err(f"{w}: unknown location {n.get('location')}")
-        if n.get("screen") not in (None, "code_lock", "stub"):
+        if n.get("screen") not in (None, "code_lock", "clock_lock", "search", "tracks", "compare"):
             rep.err(f"{w}: unknown screen {n.get('screen')}")
         if n.get("on_solved_snap") and n["on_solved_snap"] not in d["snapshots"]:
             rep.err(f"{w}: unknown snapshot {n['on_solved_snap']}")
@@ -369,6 +370,117 @@ def check_gate01_values(d: dict, rep: Report) -> None:
             for s in pillars:
                 if s not in d["signs"]:
                     rep.err(f"{w}: unknown sign {s}")
+
+
+def _merged(per: dict, lvl: str) -> dict:
+    """values(id, level) as in GameData.values: 'all' + non-level keys + the level block."""
+    out: dict = {}
+    out.update(per.get("all") or {})
+    for k, val in per.items():
+        if k not in LEVELS and k != "all":
+            out[k] = val
+    out.update(per.get(lvl) or {})
+    return out
+
+
+def _hm(s: str) -> int:
+    h, m = str(s).split(":")
+    return int(h) * 60 + int(m)
+
+
+def check_puzzle_values(d: dict, rep: Report) -> None:
+    """GATE-03, PIER-01, ALLEY-01, GATE-02: answers derivable from the values, texts and zones present."""
+    vals = d["values"]["test"] or {}
+    feedback_rules = {nid: {r.get("when") for r in (n.get("feedback_rules") or [])} for nid, n in d["nodes"].items()}
+    # --- GATE-03: departure + journey = target on every level; logic words; canon text on normal
+    per = vals.get("PZ-GATE-03") or {}
+    for lvl in LEVELS:
+        v = _merged(per, lvl)
+        w = f"values/test.yaml PZ-GATE-03.{lvl}"
+        dur = sum(v["legs_min"]) if "legs_min" in v else int(v.get("duration_min", 0))
+        if (_hm(v["departure"]) + dur) % 720 != _hm(v["target_time"]) % 720:
+            rep.err(f"{w}: departure + journey != target_time")
+        if 60 % int(v.get("snap_minutes", 1)) or _hm(v["target_time"]) % int(v.get("snap_minutes", 1)):
+            rep.err(f"{w}: target_time not reachable with snap_minutes")
+        for lang in ("ru", "en"):
+            words = (v.get("logic_words") or {}).get(lang) or {}
+            if set(words) != {"departure", "duration", "arrival"}:
+                rep.err(f"{w}: logic_words.{lang} needs departure, duration, arrival")
+    ln = d["lines"].get("LOGIC-GATE-03", {})
+    nv = _merged(per, "normal")
+    for lang in ("ru", "en"):
+        tpl = ln.get(f"template_{lang}")
+        if tpl:
+            filled = tpl
+            for k, val in ((nv.get("logic_words") or {}).get(lang) or {}).items():
+                filled = filled.replace("{%s}" % k, val)
+            if filled != ln.get(f"text_{lang}"):
+                rep.err(f"LOGIC-GATE-03: template_{lang} with normal values differs from the canon text")
+    # --- PIER-01: every target has a zone; zones >= 48 dp; reaction rules known
+    per = vals.get("PZ-PIER-01") or {}
+    lay = (d.get("layouts") or {}).get("PZ-PIER-01") or {}
+    strip = float((lay.get("scene") or {}).get("strip_px", 170))
+    rules = feedback_rules.get("PZ-PIER-01", set())
+    for o in lay.get("objects", []):
+        for r in [o.get("rule")] + list((o.get("rule_if_selected") or {}).values()) + list((o.get("rule_if_found") or {}).values()):
+            if r and r not in rules:
+                rep.err(f"layouts PZ-PIER-01 {o['id']}: rule {r} not in progression feedback_rules")
+        if o.get("target"):
+            x, y, ww, hh = o["rect"]
+            if ww * 1600 < 95 or hh * (720 - strip) < 95:
+                rep.err(f"layouts PZ-PIER-01 {o['id']}: touch zone < 48 dp ({ww * 1600:.0f}×{hh * (720 - strip):.0f})")
+    for lvl in LEVELS:
+        v = _merged(per, lvl)
+        for t in v.get("targets", []):
+            if not any(o.get("target") == t and lvl in o.get("levels", LEVELS) for o in lay.get("objects", [])):
+                rep.err(f"values PZ-PIER-01.{lvl}: target {t} has no zone in layouts.yaml")
+        for t in v.get("described", []):
+            if t not in v.get("targets", []):
+                rep.err(f"values PZ-PIER-01.{lvl}: described {t} is not a target")
+            check_string(d, rep, f"pz.pier01.desc.{t}", f"PZ-PIER-01.{lvl}")
+    # --- ALLEY-01: two fresh human chains in different directions; answer matches chain dirs
+    per = vals.get("PZ-ALLEY-01") or {}
+    for lvl in LEVELS:
+        v = _merged(per, lvl)
+        w = f"values/test.yaml PZ-ALLEY-01.{lvl}"
+        chains = {c["id"]: c for c in v.get("chains", [])}
+        ans = v.get("answer") or {}
+        if set(ans.get("fresh", [])) != set(chains):
+            rep.err(f"{w}: answer.fresh must be exactly the chains")
+        if len({c.get("dir") for c in chains.values()}) != 2:
+            rep.err(f"{w}: the two chains must go in different directions")
+        for cid, c in chains.items():
+            if (ans.get("dir") or {}).get(cid) != c.get("dir"):
+                rep.err(f"{w}: answer.dir.{cid} != chain dir")
+    # --- GATE-02: answer ids exist; fragment texts are verbatim lines of the level's documents
+    per = vals.get("PZ-GATE-02") or {}
+    for lvl in LEVELS:
+        v = _merged(per, lvl)
+        w = f"values/test.yaml PZ-GATE-02.{lvl}"
+        segs = {s["id"] for s in (v.get("tape") or {}).get("segments", [])}
+        ans = v.get("answer") or {}
+        for r in ans.get("rain", []):
+            if r not in segs:
+                rep.err(f"{w}: answer.rain {r} is not a tape segment")
+        for it in ans.get("items_any", []):
+            if it not in v.get("notes", []):
+                rep.err(f"{w}: answer.items_any {it} is not in notes")
+        concls = [str(c)[0] for c in v.get("conclusions", [])]
+        if str(ans.get("conclusion", ""))[:1] not in concls:
+            rep.err(f"{w}: answer.conclusion not among conclusions")
+        for c in concls:
+            check_string(d, rep, f"pz.gate02.concl.{c}", w)
+        for doc_key, ids in (("doc.pier_notes", v.get("notes", [])),
+                             ("doc.weather_log", v.get("journal", []) if v.get("journal_in_pool", True) else [])):
+            doc = d["strings"].get(f"{doc_key}.{lvl}") or {}
+            for fid in ids:
+                fs = d["strings"].get(f"frag.{fid}")
+                if not fs:
+                    rep.err(f"{w}: no UI string frag.{fid}")
+                    continue
+                for lang in ("ru", "en"):
+                    if fs.get(lang) not in (doc.get(lang) or ""):
+                        rep.err(f"{w}: frag.{fid}.{lang} is not a verbatim part of {doc_key}.{lvl}")
 
 
 def collect_codes(values: dict) -> dict:
@@ -481,6 +593,7 @@ def main() -> int:
         return 1
     check_references(d, rep)
     check_gate01_values(d, rep)
+    check_puzzle_values(d, rep)
     check_codes_unique(d, rep)
     graph = check_graph(d, rep)
 

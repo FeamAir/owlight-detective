@@ -1,6 +1,12 @@
 # Узлы-головоломки и связи (каркас 7.6). Порядок узлов = порядок приоритета «обязательных» для «Мыслей».
 # engine: screen — какой экран головоломки открывает движок:
-#   code_lock — кодовый замок T01 (сделан); stub — заглушка «в разработке» с кнопкой отладки «Решить».
+#   code_lock — кодовый замок T01; clock_lock — часовой замок T19; search — поиск по силуэтам T08;
+#   tracks — следы T16; compare — сравнение документов T15.
+# engine: feedback_mode — как звучит ошибка по уровням (каркас, 4.4):
+#   line — только реплика (нет реплики → «Неверно»); wrong_line — «Неверно» + реплика, если есть;
+#   count — «Неверно. Верно N из M»; line_only — реплика или ничего; wrong — только «Неверно»; none — без реакции.
+#   По умолчанию: easy line, normal wrong_line, hard wrong.
+# engine: feedback_rules — какая реакция на какую ошибку (when = имя правила из логики экрана; other — остальное).
 # engine: on_solved_snap — снимок, который кладётся в блокнот при решении.
 nodes:
   - id: PZ-GATE-01
@@ -35,7 +41,7 @@ nodes:
   - id: PZ-GATE-03
     kind: puzzle
     type: T19
-    screen: stub
+    screen: clock_lock
     location: LOC-GATE
     rating: 2
     mandatory: true
@@ -44,12 +50,19 @@ nodes:
     unlocks: [IT-STUDY-KEY]
     on_solved_line: DLG-GATE-009
     logic_line: LOGIC-GATE-03
+    # engine: правила (test-set GATE-03, «Обратная связь»): departure — время отправления; duration — время в пути;
+    #   near — ошибка сложения (±15 мин или ровно ±1 ч); now — «сейчас» (12:00, ходики на С); ticket_no — № билета (С)
+    feedback_rules:
+      - { when: departure, easy: FB-GATE03-E1, normal: FB-GATE03-N1 }
+      - { when: duration,  easy: FB-GATE03-E2 }
+      - { when: near,      easy: FB-GATE03-E3, normal: FB-GATE03-N2 }
+      - { when: now,       easy: FB-GATE03-E4 }
     nav: { area: [HINT-EX-02, HINT-NAV-GATE03-A2], precise: [HINT-NAV-GATE03-P1, HINT-NAV-GATE03-P2],
            ready: HINT-NAV-GATE03-R, missing: HINT-NAV-GATE03-M }
   - id: PZ-PIER-01
     kind: puzzle
     type: T08
-    screen: stub
+    screen: search
     location: LOC-PIER
     rating: 1
     mandatory: true
@@ -59,12 +72,21 @@ nodes:
     activates: [HS-ALLEY-GRAVEL, HS-GATE-WEATHERREC]
     on_solved_snap: SNAP-PIER-SCENE
     logic_line: LOGIC-PIER-01
+    # engine: Н — только «Не то» (FB-PIER01-N1), С — без реакции (test-set PIER-01). Правила — от предмета в сцене
+    #   (data/puzzles/layouts.yaml → rule / rule_if_selected).
+    feedback_mode: { easy: line, normal: line_only, hard: none }
+    feedback_rules:
+      - { when: lifebuoy,     easy: FB-PIER01-E1, normal: FB-PIER01-N1 }
+      - { when: tarp_as_coat, easy: FB-PIER01-E2, normal: FB-PIER01-N1 }
+      - { when: tarp,         easy: FB-PIER01-E3, normal: FB-PIER01-N1 }
+      - { when: whole_coat,   easy: FB-PIER01-E4, normal: FB-PIER01-N1 }
+      - { when: feather,      easy: FB-PIER01-E5, normal: FB-PIER01-N1 }
     nav: { area: [HINT-NAV-PIER01-A1, HINT-NAV-PIER01-A2], precise: [HINT-NAV-PIER01-P1, HINT-NAV-PIER01-P2],
            ready: HINT-NAV-PIER01-R }
   - id: PZ-ALLEY-01
     kind: puzzle
     type: T16
-    screen: stub
+    screen: tracks
     location: LOC-ALLEY
     rating: 2
     mandatory: true
@@ -72,12 +94,20 @@ nodes:
     requires: { all_of: [PZ-PIER-01] }
     unlocks: [CL-PRINTS]
     logic_line: LOGIC-ALLEY-01
+    # engine: части ответа (5.3): (а) отмеченные группы, (б) направление → «Верно N из 2» на Н.
+    feedback_mode: { easy: line, normal: count, hard: wrong }
+    feedback_rules:
+      - { when: pits,      easy: FB-ALLEY01-E1 }
+      - { when: ruts,      easy: FB-ALLEY01-E2 }
+      - { when: trampled,  easy: FB-ALLEY01-E3 }
+      - { when: one_chain, easy: FB-ALLEY01-E4 }
+      - { when: direction, easy: FB-ALLEY01-E5 }
     nav: { area: [HINT-NAV-ALLEY01-A1, HINT-NAV-ALLEY01-A2], precise: [HINT-NAV-ALLEY01-P1, HINT-NAV-ALLEY01-P2],
            ready: HINT-NAV-ALLEY01-R, missing: HINT-NAV-ALLEY01-M }
   - id: PZ-GATE-02
     kind: puzzle
     type: T15
-    screen: stub
+    screen: compare
     location: LOC-GATE
     rating: 1
     mandatory: any_of:F-I-3
@@ -85,6 +115,15 @@ nodes:
     requires: { all_of: [GT-P03, PZ-PIER-01], docs: [SNAP-WEATHER-TAPE, DOC-PIER-NOTES] }
     unlocks: [CL-RAIN]
     logic_line: LOGIC-GATE-02
+    # engine: части (5.4): фрагмент о дожде, фрагмент о вещах, вывод → «Верно N из 3» на Н.
+    #   Роли фрагментов — values PZ-GATE-02.roles.
+    feedback_mode: { easy: line, normal: count, hard: wrong }
+    feedback_rules:
+      - { when: tape_wrong,       easy: FB-GATE02-E1 }
+      - { when: hem,              easy: FB-GATE02-E2 }
+      - { when: rain_evidence,    easy: FB-GATE02-E3 }
+      - { when: folded,           easy: FB-GATE02-E4 }
+      - { when: wrong_conclusion, easy: FB-GATE02-E5 }
     nav: { area: [HINT-NAV-GATE02-A1, HINT-NAV-GATE02-A2], precise: [HINT-NAV-GATE02-P1, HINT-NAV-GATE02-P2],
            ready: HINT-NAV-GATE02-R, missing: HINT-NAV-GATE02-M }
   - id: SLICE-END

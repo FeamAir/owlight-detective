@@ -1,31 +1,18 @@
 class_name CodeLockScreen
-extends Overlay
+extends PuzzleScreen
 ## T01 code lock (PZ-GATE-01) on data (дизайн 5.3 T01, 3.12): brass plate, engraving "pillars with bowls"
 ## (one per drum), N drums 0–9 (swipe up/down or tap the upper/lower half), handle checks the code.
 ## Reactions by level: easy — what is wrong; normal — "Wrong" + line; hard — only "Wrong".
 
-signal solved(pz: String)
-
-var pz := "PZ-GATE-01"
-var _v: Dictionary
 var _digits: Array = []
 var _drums: Array = []
-var _feedback: RichTextLabel
 var _plate: Control
 var _drag_start := {}
-var _done := false
 var _shake := 0.0
 var _handle: Button
 
 
-func setup(puzzle_id: String) -> CodeLockScreen:
-	pz = puzzle_id
-	return self
-
-
-func _ready() -> void:
-	Game.current_puzzle = pz
-	_v = Game.data.values(pz, Game.state.difficulty)
+func _build() -> void:
 	var n := CodeLockLogic.code_length(_v)
 	var saved: Variant = Game.state.puzzle_progress.get(pz, {}).get("drums")
 	_digits = saved if typeof(saved) == TYPE_ARRAY and saved.size() == n else []
@@ -50,28 +37,17 @@ func _ready() -> void:
 		d.draw.connect(_draw_drum.bind(d, i))
 		_plate.add_child(d)
 		_drums.append(d)
-	var handle := UiKit.button(Game.t("pz.handle"), 360, true)
-	_handle = handle
-	handle.anchor_left = 0.5; handle.anchor_right = 0.5; handle.anchor_top = 1.0; handle.anchor_bottom = 1.0
-	handle.offset_left = -180; handle.offset_right = 180; handle.offset_top = -100 - UiKit.BIG_TAP; handle.offset_bottom = -100
-	handle.pressed.connect(_check)
-	add_child(handle)
-	_feedback = UiKit.rich(UiKit.FONT_SUB, UiKit.LAMP)
-	_feedback.anchor_left = 0.17; _feedback.anchor_right = 0.79; _feedback.anchor_top = 1.0; _feedback.anchor_bottom = 1.0
-	_feedback.offset_top = -92; _feedback.offset_bottom = -8
-	_feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	add_child(_feedback)
-	add_back_button()
-	if not Game.state.has("tut.UI-TUT-05"):
-		Game.state.set_flag("tut.UI-TUT-05")
-		_feedback.text = "[i]%s[/i]" % Game.t("UI-TUT-05")
+	_handle = add_action_button(Game.t("pz.handle"), 320)
+	_handle.pressed.connect(_check)
 
 
-func _exit_tree() -> void:
-	if Game.current_puzzle == pz:
-		Game.current_puzzle = ""
-	if Game.state:
-		Game.state.puzzle_progress[pz] = {"drums": _digits}
+func _ready() -> void:
+	super._ready()
+	tutorial_once("UI-TUT-05")
+
+
+func _save_progress() -> void:
+	Game.state.puzzle_progress[pz] = {"drums": _digits}
 
 
 func _process(delta: float) -> void:
@@ -112,35 +88,12 @@ func _check() -> void:
 	if _done:
 		return
 	var ans := _answer()
-	var ok := CodeLockLogic.is_correct(ans, _v)
-	Game.state.record_attempt(pz, ok)
-	if ok:
-		_done = true
-		_handle.visible = false
-		var params := CodeLockLogic.logic_params(_v, Game.lang(), Game.data)
-		var logic: String = Game.data.node(pz).get("logic_line", "")
-		Game.state.note_line(logic)
-		_feedback.text = "[b]%s[/b]\n[i]%s[/i]" % [Game.t("pz.solved"), UiKit.escape_bb(Game.line(logic, params))]
-		_feedback.offset_top = -205
+	if CodeLockLogic.is_correct(ans, _v):
 		_plate.queue_redraw()
-		await get_tree().create_timer(0.3).timeout
-		var cont := UiKit.button(Game.t("btn.next"), 280, true)
-		cont.anchor_left = 1.0; cont.anchor_right = 1.0; cont.anchor_top = 1.0; cont.anchor_bottom = 1.0
-		cont.offset_left = -310; cont.offset_right = -24; cont.offset_top = -24 - UiKit.BIG_TAP; cont.offset_bottom = -24
-		cont.pressed.connect(func() -> void:
-			solved.emit(pz)
-			close())
-		add_child(cont)
+		finish("pz.solved")
 		return
-	var rule := CodeLockLogic.classify(ans, _v, Game.data.values("IT-OWL", Game.state.difficulty).get("owl_base_signs", []), Game.data)
-	var fb := CodeLockLogic.feedback(rule, Game.state.difficulty, Game.data.node(pz))
-	var parts: Array = []
-	if fb["ui"] != "":
-		parts.append("[b]%s[/b]" % Game.t(fb["ui"]))
-	if fb["line"] != "":
-		Game.state.note_line(fb["line"])
-		parts.append("[i]%s[/i]" % UiKit.escape_bb(Game.line(fb["line"])))
-	_feedback.text = "  ".join(parts)
+	var rule := CodeLockLogic.classify(ans, _v, Game.data.values("IT-OWL", level()).get("owl_base_signs", []), Game.data)
+	wrong(rule)
 	_shake = 0.4
 
 

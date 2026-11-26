@@ -140,7 +140,7 @@ func _draw_fountain() -> void:
 		_layer.draw_arc(p, 84, 0, TAU, 48, UiKit.INK, 4.0)
 		SignDraw.draw(_layer, s, p + Vector2(0, -56), 28, UiKit.INK, Color(0.75, 0.73, 0.66))
 	_layer.draw_string(font, Vector2(40, size.y - 160), Game.t("cu.tap_bowl"), HORIZONTAL_ALIGNMENT_LEFT, -1, 28, UiKit.LAMP)
-	_layer.draw_string(font, Vector2(size.x * 0.5 - 60, size.y - 24), "↓ аллея / drive", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, UiKit.FOG)
+	_layer.draw_string(font, Vector2(size.x * 0.5 - 60, size.y - 24), Game.t("cu.drive_down"), HORIZONTAL_ALIGNMENT_LEFT, -1, 24, UiKit.FOG)
 
 
 func _draw_bowl_zoom() -> void:
@@ -186,7 +186,7 @@ func _draw_gate_tape() -> void:
 	for di in 2:
 		var x0 := r.position.x + r.size.x * 0.5 * di
 		_layer.draw_line(Vector2(x0, r.position.y), Vector2(x0, r.end.y), UiKit.INK, 2.0)
-		_layer.draw_string(font, Vector2(x0 + 8, r.position.y - 10), "%s окт. / %s Oct" % [days[di][0], days[di][0]], HORIZONTAL_ALIGNMENT_LEFT, -1, 26, UiKit.LAMP)
+		_layer.draw_string(font, Vector2(x0 + 8, r.position.y - 10), Game.t("cu.tape_day", {"d": days[di][0]}), HORIZONTAL_ALIGNMENT_LEFT, -1, 26, UiKit.LAMP)
 		for h in range(0, 24, 3):
 			var xh := x0 + r.size.x * 0.5 * h / 24.0
 			_layer.draw_string(font, Vector2(xh + 2, r.end.y + 28), str(h), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, UiKit.IVORY)

@@ -20,6 +20,7 @@ var _toast: Label
 var _toast_queue: Array = []
 var _toast_time := 0.0
 var _tut: Label
+var _tut_panel: PanelContainer
 var _hint_btn: HintButton
 var _bag_btn: Button
 var _nb_btn: Button
@@ -103,14 +104,26 @@ func _build_hud() -> void:
 	_toast.add_theme_constant_override("outline_size", 8)
 	_hud.add_child(_toast)
 
+	# tutorial prompt on its own plate: readable over any background (placeholder captions, bright sky)
+	_tut_panel = PanelContainer.new()
+	var tsb := StyleBoxFlat.new()
+	tsb.bg_color = Color(UiKit.LAKE_DUSK, 0.9)
+	tsb.border_color = Color(UiKit.LAMP, 0.8)
+	tsb.set_border_width_all(2)
+	tsb.set_corner_radius_all(16)
+	tsb.content_margin_left = 32; tsb.content_margin_right = 32; tsb.content_margin_top = 12; tsb.content_margin_bottom = 12
+	tsb.shadow_color = Color(0, 0, 0, 0.45)
+	tsb.shadow_size = 10
+	_tut_panel.add_theme_stylebox_override("panel", tsb)
+	_tut_panel.anchor_left = 0.22; _tut_panel.anchor_right = 0.78; _tut_panel.anchor_top = 0.5; _tut_panel.anchor_bottom = 0.5
+	_tut_panel.offset_top = -220; _tut_panel.offset_bottom = -220
+	_tut_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tut_panel.visible = false
 	_tut = UiKit.label("", UiKit.FONT_SUB, UiKit.IVORY)
-	_tut.anchor_left = 0.2; _tut.anchor_right = 0.8; _tut.anchor_top = 0.5; _tut.anchor_bottom = 0.5
-	_tut.offset_top = -210; _tut.offset_bottom = -140
 	_tut.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_tut.add_theme_color_override("font_outline_color", UiKit.INK)
-	_tut.add_theme_constant_override("outline_size", 10)
 	_tut.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hud.add_child(_tut)
+	_tut_panel.add_child(_tut)
+	_hud.add_child(_tut_panel)
 
 
 func _refresh_hud() -> void:
@@ -172,7 +185,7 @@ func _set_targets(vp_id: String) -> void:
 			decals.append({"sign": sign_id, "yaw": float(ov["yaw"]), "pitch": float(ov["pitch"]), "size_deg": float(ov["size_deg"])})
 	pano.decals = decals
 	pano.shimmer = Game.data.difficulty_profile(Game.state.difficulty).get("highlight") == "shimmer"
-	pano.show_debug = Game.settings["debug_overlay"]
+	pano.show_debug = Game.debug_build and bool(Game.settings["debug_overlay"])
 
 
 func _move_to(vp_id: String, lines: Array) -> void:
@@ -246,7 +259,7 @@ func _handle(res: Dictionary) -> void:
 			say(res["lines"])
 		"line", "locked":
 			say(res["lines"])
-			if res.get("boundary_label", false) and res["lines"].size() > 0 and _is_boundary(res.get("hotspot", "")):
+			if Game.debug_build and res.get("boundary_label", false) and res["lines"].size() > 0 and _is_boundary(res.get("hotspot", "")):
 				_toast_queue.append(Game.t("UI-BOUNDARY"))
 		"slice_end":
 			say(res["lines"])
@@ -262,11 +275,21 @@ func _is_boundary(hs_id: String) -> bool:
 
 func open_puzzle(pz: String) -> void:
 	var node := Game.data.node(pz)
-	var scr: Overlay
-	if node.get("screen") == "code_lock":
-		scr = CodeLockScreen.new().setup(pz)
-	else:
-		scr = StubPuzzleScreen.new().setup(pz)
+	var scr: PuzzleScreen
+	match str(node.get("screen", "")):
+		"code_lock":
+			scr = CodeLockScreen.new().setup(pz)
+		"clock_lock":
+			scr = ClockLockScreen.new().setup(pz)
+		"search":
+			scr = SearchScreen.new().setup(pz)
+		"tracks":
+			scr = TracksScreen.new().setup(pz)
+		"compare":
+			scr = CompareScreen.new().setup(pz)
+		_:
+			push_error("unknown puzzle screen for %s" % pz)
+			return
 	scr.solved.connect(_on_solved)
 	_open(scr)
 
@@ -473,7 +496,7 @@ func _tutorial_event(ev: String) -> void:
 func _update_tutorial() -> void:
 	var tut: Dictionary = Game.state.tutorial
 	if tut.get("done", false):
-		_tut.text = ""
+		_set_tut("")
 		return
 	var step := int(tut.get("step", 0))
 	if step == 2 and Game.state.has("seen.notebook"):
@@ -481,10 +504,16 @@ func _update_tutorial() -> void:
 		step = 3
 	var steps: Array = Game.data.event("EV-TUTORIAL").get("steps", [])
 	if step < steps.size():
-		_tut.text = Game.t(steps[step])
+		_set_tut(Game.t(steps[step]))
 	else:
 		tut["done"] = true
-		_tut.text = ""
+		_set_tut("")
 		var then: Dictionary = Game.data.event("EV-TUTORIAL").get("then_once", {})
 		if Game.state.difficulty in then.get("levels", []):
 			_toast_queue.append(Game.t(then.get("ui", "UI-TUT-07")))
+
+
+func _set_tut(text: String) -> void:
+	if _tut.text != text:
+		_tut.text = text
+	_tut_panel.visible = text != ""

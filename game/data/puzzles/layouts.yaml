@@ -1,0 +1,37 @@
+# Раскладка сцен головоломок (зоны касания). Правит левел-дизайнер; программист не нужен.
+# Координаты — доли сцены: rect [x, y, w, h], 0…1 от левого верхнего угла кадра сцены.
+# Зона касания цели — не меньше 48 dp (≈ 96 ед. при 1600×720): проверяет game/tools/data_build.py.
+# Когда придёт настоящая картинка мостков, зоны подгоняются под неё; движок рисует заглушку по shape.
+#
+# PZ-PIER-01 (T08), test-set-01 PIER-01 «Что видно» и «Визуальное ТЗ».
+#   target — какая цель списка (если цель есть на уровне: values PZ-PIER-01.targets), иначе предмет нейтральный;
+#   rule — реакция на тап по похожему предмету (progression.yaml → feedback_rules);
+#   rule_if_selected — реакция, когда игрок выбрал силуэт в списке ({силуэт: правило});
+#   levels — предмет есть только на этих уровнях (по умолчанию на всех).
+PZ-PIER-01:
+  scene: { strip_px: 170 }     # высота полосы списка силуэтов внизу экрана; сцена — всё, что выше
+  objects:
+    - { id: boathouse,   shape: boathouse, rect: [0.00, 0.04, 0.15, 0.50] }
+    - { id: oilskin,     shape: oilskin,   rect: [0.02, 0.24, 0.06, 0.26], levels: [hard] }
+    - { id: bucket,      shape: bucket,    rect: [0.150, 0.40, 0.065, 0.19], target: full_bucket }
+    - { id: lamp_post,   shape: post,      rect: [0.225, 0.02, 0.025, 0.60] }
+    - { id: lifebuoy,    shape: ring,      rect: [0.255, 0.20, 0.075, 0.18], rule: lifebuoy }
+    - { id: rope,        shape: coil,      rect: [0.30, 0.60, 0.08, 0.13] }
+    - { id: net_box,     shape: tarp_box,  rect: [0.39, 0.40, 0.13, 0.21], rule: tarp,
+        rule_if_selected: { coat: tarp_as_coat } }
+    - { id: sou_wester,  shape: souwester, rect: [0.43, 0.15, 0.06, 0.12], levels: [hard] }
+    - { id: rod,         shape: rod,       rect: [0.53, 0.10, 0.02, 0.50] }
+    - { id: puddle,      shape: puddle,    rect: [0.56, 0.63, 0.12, 0.18], target: puddle }
+    - { id: leaf_1,      shape: leaf,      rect: [0.31, 0.80, 0.06, 0.18], target: wet_leaves }
+    - { id: leaf_2,      shape: leaf,      rect: [0.47, 0.74, 0.06, 0.18], target: wet_leaves }
+    - { id: leaf_3,      shape: leaf,      rect: [0.62, 0.42, 0.06, 0.18], target: wet_leaves }
+    - { id: leaf_4,      shape: leaf,      rect: [0.70, 0.80, 0.06, 0.18], target: wet_leaves }
+    - { id: hat,         shape: hat,       rect: [0.755, 0.13, 0.11, 0.19], target: hat }
+    - { id: coat,        shape: coat,      rect: [0.70, 0.30, 0.22, 0.22], target: coat,
+        rule_if_found: { coat_damp_hem: whole_coat } }    # тап по корпусу после цели 1, пока низ не найден
+    - { id: coat_hem,    shape: hem,       rect: [0.70, 0.52, 0.22, 0.18], target: coat_damp_hem }
+    - { id: last_post,   shape: post,      rect: [0.93, 0.08, 0.035, 0.62] }
+    - { id: gull,        shape: gull,      rect: [0.915, 0.00, 0.07, 0.10] }
+    - { id: feather,     shape: feather,   rect: [0.84, 0.74, 0.08, 0.18], rule: feather }
+    - { id: boards,      shape: boards,    rect: [0.00, 0.55, 1.00, 0.45], background: true,
+        rule_if_selected: { coat_damp_hem: whole_coat } }

@@ -3,6 +3,11 @@
 #   game/tools/build_apk.sh                 data → placeholders → import → tests → export → verify
 #   game/tools/build_apk.sh --skip-tests
 #   game/tools/build_apk.sh --force-art     regenerate placeholder art
+#   game/tools/build_apk.sh --armv7         also build a separate APK for old 32-bit phones (armeabi-v7a)
+#
+# Why armv7 is a separate APK: the Godot 4.7.2 engine library for armeabi-v7a adds ~32 MB to the debug APK
+# (~26 MB in release), so a combined arm64 + v7 APK would grow from ~29 MB to ~61 MB. Google Play builds
+# (AAB) split per ABI anyway; for side-loading on an old phone use the armv7 APK.
 #
 # Needs (installed outside the repo, see game/README.md):
 #   GODOT        Godot 4.7.2 binary              (default: godot in PATH)
@@ -17,6 +22,7 @@ GAME_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPO_DIR="$(cd "$GAME_DIR/.." && pwd)"
 OUT_DIR="$REPO_DIR/builds"
 APK="$OUT_DIR/owlight-slice01-debug.apk"
+APK_V7="$OUT_DIR/owlight-slice01-debug-armv7.apk"
 
 export GODOT="${GODOT:-godot}"
 export ANDROID_HOME="${ANDROID_HOME:-/opt/android-sdk}"
@@ -26,10 +32,12 @@ BUILD_TOOLS="$ANDROID_HOME/build-tools/36.1.0"
 
 skip_tests=0
 force_art=""
+armv7=0
 for a in "$@"; do
   case "$a" in
     --skip-tests) skip_tests=1 ;;
     --force-art) force_art="--force" ;;
+    --armv7) armv7=1 ;;
     *) echo "unknown option $a"; exit 2 ;;
   esac
 done
@@ -71,8 +79,19 @@ rm -f "$APK" "$APK.idsig"
   tail -40 "$OUT_DIR/export.log"; echo "EXPORT FAILED (log: $OUT_DIR/export.log)"; exit 1; }
 [ -f "$APK" ] || { tail -40 "$OUT_DIR/export.log"; echo "EXPORT FAILED: no APK"; exit 1; }
 
+verify() {
+  "$BUILD_TOOLS/apksigner" verify --verbose "$1" 2>/dev/null | grep -E "^Verifies|v2 scheme|v3 scheme"
+  "$BUILD_TOOLS/aapt2" dump badging "$1" 2>/dev/null | grep -E "^package:|targetSdkVersion|sdkVersion|application-label:|native-code"
+  echo "APK: $1 ($(du -h "$1" | cut -f1))"
+}
 echo "== verify"
-"$BUILD_TOOLS/apksigner" verify --verbose "$APK" 2>/dev/null | grep -E "^Verifies|v2 scheme|v3 scheme"
-"$BUILD_TOOLS/aapt2" dump badging "$APK" 2>/dev/null | grep -E "^package:|targetSdkVersion|sdkVersion|application-label:|native-code"
-echo "APK: $APK ($(du -h "$APK" | cut -f1))"
+verify "$APK"
+
+if [ "$armv7" -eq 1 ]; then
+  echo "== export debug APK for armeabi-v7a (old 32-bit phones)"
+  rm -f "$APK_V7" "$APK_V7.idsig"
+  "$GODOT" --headless --path "$GAME_DIR" --export-debug "Android armv7" "$APK_V7" >"$OUT_DIR/export-armv7.log" 2>&1 || {
+    tail -40 "$OUT_DIR/export-armv7.log"; echo "EXPORT FAILED (log: $OUT_DIR/export-armv7.log)"; exit 1; }
+  verify "$APK_V7"
+fi
 echo "Install: adb install -r \"$APK\"  (or copy the file to the phone and open it)"

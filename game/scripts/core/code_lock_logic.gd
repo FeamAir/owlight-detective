@@ -60,18 +60,8 @@ static func classify(answer: String, v: Dictionary, owl_base: Array, data: GameD
 ## Reaction for a wrong answer: {ui: "UI-FB-WRONG" or "", line: line_id or ""}.
 ## Easy — a line that says what is wrong; normal — "Wrong" + line; hard — only "Wrong" (каркас, 4.4).
 static func feedback(rule: String, level: String, node: Dictionary) -> Dictionary:
-	if level == "hard":
-		return {"ui": "UI-FB-WRONG", "line": ""}
-	var line := ""
-	for r in node.get("feedback_rules", []):
-		if r.get("when") == rule:
-			line = str(r.get(level, ""))
-			break
-	if line == "":
-		for r in node.get("feedback_rules", []):
-			if r.get("when") == "other":
-				line = str(r.get(level, ""))
-	return {"ui": "UI-FB-WRONG" if level == "normal" else "", "line": line}
+	var fb := PuzzleRules.feedback(rule, level, node)
+	return {"ui": fb["ui"], "line": fb["line"]}
 
 
 ## Parameters for the LOGIC-GATE-01 template in a language: {pillars}, {levels}.

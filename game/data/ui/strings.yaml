@@ -62,7 +62,6 @@ strings:
   debug.sp.before_alley01: { ru: "Перед гравием (ALLEY-01)", en: "Before the gravel (ALLEY-01)" }
   debug.sp.before_gate02: { ru: "Перед лентой погоды (GATE-02)", en: "Before the weather tape (GATE-02)" }
   debug.sp.before_end:   { ru: "Ключ получен (конец среза)", en: "Key obtained (slice end)" }
-  debug.solve:           { ru: "[отладка] Решить", en: "[debug] Solve" }
   debug.protocol:        { ru: "Протокол прохождения", en: "Play protocol" }
   # --- обучение (4.6) ---
   UI-TUT-01:             { ru: "Проведите пальцем, чтобы осмотреться", en: "Swipe to look around" }
@@ -99,14 +98,65 @@ strings:
   # --- головоломки ---
   pz.handle:             { ru: "Повернуть ручку", en: "Turn the handle" }
   pz.solved:             { ru: "Открыто", en: "Open" }
-  pz.stub.title:         { ru: "Головоломка {id}: экран в разработке", en: "Puzzle {id}: screen in development" }
-  pz.stub.body:          { ru: "Механика описана в docs/levels/slice-01-spec.md (5.x). В этой сборке экран ещё не сделан — можно отметить головоломку решённой кнопкой отладки, чтобы проверить ход среза.", en: "The mechanic is described in docs/levels/slice-01-spec.md (5.x). This build doesn't have the screen yet; use the debug button to mark it solved and test the slice flow." }
-  pz.stub.not_ready:     { ru: "Пока не открыто: не выполнены условия ({req}).", en: "Not available yet: requirements not met ({req})." }
   pz.reset:              { ru: "Сброс", en: "Reset" }
+  pz.done:               { ru: "Готово", en: "Done" }
+  pz.solved_generic:     { ru: "Решено", en: "Solved" }
+  # названия головоломок (вкладка «Решённое»; RU — spec 5.0, EN — черновик программиста)
+  pz.title.PZ-GATE-01:   { ru: "Замок сторожки", en: "The gatehouse lock" }
+  pz.title.PZ-PIER-01:   { ru: "Пальто на мостках", en: "The coat on the pier" }
+  pz.title.PZ-ALLEY-01:  { ru: "Следы на гравии", en: "Tracks in the gravel" }
+  pz.title.PZ-GATE-02:   { ru: "Ночь на ленте", en: "The night on the tape" }
+  pz.title.PZ-GATE-03:   { ru: "Ящик с ключами", en: "The key box" }
+  # GATE-03 (T19): часовой замок
+  pz.gate03.latch:       { ru: "Нажать защёлку", en: "Press the latch" }
+  pz.gate03.tag:         { ru: "Для гостя с поезда", en: "For the guest off the train" }
+  pz.gate03.hint_drag:   { ru: "Тяните стрелку по кругу", en: "Drag a hand round the dial" }
+  pz.gate03.hour:        { ru: "Часы", en: "Hour" }
+  pz.gate03.minute:      { ru: "Минуты", en: "Minutes" }
+  pz.gate03.key_tag:     { ru: "Кабинет", en: "Study" }
+  # PIER-01 (T08): поиск по силуэтам
+  pz.pier01.counter:     { ru: "Найдено {n} из {m}", en: "Found {n} of {m}" }
+  pz.pier01.desc.coat_damp_hem: { ru: "Вещь, которая промокла только снизу", en: "Something soaked only underneath" }
+  pz.pier01.desc.full_bucket:   { ru: "То, по чему видно, сколько воды натекло за ночь", en: "Something that shows how much water fell overnight" }
+  # ALLEY-01 (T16): следы на гравии
+  pz.alley01.task:       { ru: "Отметьте следы человека, оставленные после дождя, и куда он шёл", en: "Mark the human tracks left after the rain, and which way they went" }
+  pz.alley01.to_pier:    { ru: "↑ к озеру", en: "↑ to the lake" }
+  pz.alley01.to_alley:   { ru: "↓ к аллее", en: "↓ to the drive" }
+  pz.alley01.dir_unset:  { ru: "куда? ↕", en: "which way? ↕" }
+  pz.alley01.lake:       { ru: "к озеру", en: "to the lake" }
+  pz.alley01.drive:      { ru: "главная аллея", en: "main drive" }
+  # GATE-02 (T15): сравнение документов (тексты фрагментов = строки утверждённых документов 5.4;
+  #   data_build.py проверяет, что каждый фрагмент дословно есть в документе своего уровня)
+  pz.gate02.doc.tape:    { ru: "Лента погодного самописца", en: "Weather recorder tape" }
+  pz.gate02.doc.notes:   { ru: "Записи с мостков", en: "Notes from the pier" }
+  pz.gate02.doc.journal: { ru: "Метеожурнал", en: "Weather log" }
+  pz.gate02.doc.gate:    { ru: "Лента ворот", en: "Gate tape" }
+  pz.gate02.picked:      { ru: "Выбрано: {n} из 2", en: "Picked: {n} of 2" }
+  pz.gate02.concl.A:     { ru: "А. Пальто пролежало на мостках всю ночь.", en: "A. The coat lay on the pier all night." }
+  pz.gate02.concl.B:     { ru: "Б. Пальто принесли вечером, ещё до дождя.", en: "B. The coat was brought in the evening, before the rain." }
+  pz.gate02.concl.C:     { ru: "В. Пальто принесли, пока шёл ночной дождь.", en: "C. The coat was brought while the night rain was falling." }
+  pz.gate02.concl.D:     { ru: "Г. Пальто принесли, когда ночной дождь уже кончился.", en: "D. The coat was brought after the night rain had stopped." }
+  pz.gate02.month:       { ru: "{d} окт.", en: "{d} Oct" }
+  pz.gate02.gate_mark:   { ru: "{d} окт., {t}", en: "{d} Oct, {t}" }
+  frag.coat_folded:      { ru: "1. Пальто сложено у последней сваи.", en: "1. Coat folded by the last post." }
+  frag.hat_dry:          { ru: "2. Шляпа лежит на пальто — сухая целиком.", en: "2. Hat on the coat — completely dry." }
+  frag.top_dry:          { ru: "3. Верх пальто сухой, ворс торчит.", en: "3. Top of the coat dry, nap standing up." }
+  frag.hem_damp:         { ru: "4. По нижнему краю пальто — подмокшая полоса.", en: "4. A damp band along the bottom edge." }
+  frag.puddle:           { ru: "5. В выемке доски — лужица.", en: "5. A puddle in a dip in the boards." }
+  frag.leaves_wet:       { ru: "6. Листья по всему настилу мокрые.", en: "6. Wet leaves all over the decking." }
+  frag.bucket_full:      { ru: "7. Ведро под жёлобом сарая — полное до края.", en: "7. Bucket under the boathouse gutter — full to the brim." }
+  frag.j10_rain:         { ru: "10 окт.  Дождь с 06:00 до 09:00. Ветер с дороги.", en: "10 Oct.  Rain 06:00 to 09:00. Wind from the road." }
+  frag.j11_dry:          { ru: "11 окт.  Сухо. Ветер с озера.", en: "11 Oct.  Dry. Wind off the lake." }
+  frag.j12_rain:         { ru: "12 окт.  Дождь с 14:00 до 16:30, небольшой. Ветер с озера.", en: "12 Oct.  Rain 14:00 to 16:30, light. Wind off the lake." }
+  frag.j13_dry:          { ru: "13 окт.  Сухо. Ветер с дороги. Туман до полудня.", en: "13 Oct.  Dry. Wind from the road. Fog till noon." }
+  frag.j14_dry:          { ru: "14 окт.  Сухо. Ветер с озера, к вечеру крепче.", en: "14 Oct.  Dry. Wind off the lake, stronger by evening." }
+  frag.j14_forecast:     { ru: "К ночи, похоже, польёт.", en: "Looks like rain by night." }
   cu.open_puzzle:       { ru: "Сравнить документы", en: "Compare documents" }
   cu.tap_bowl:           { ru: "Коснитесь чаши, чтобы рассмотреть", en: "Tap a bowl to look closer" }
   cu.fountain.title:     { ru: "Фонтан: чаши", en: "Fountain: bowls" }
   cu.pillars.title:      { ru: "Столбы ворот, слева направо", en: "Gate pillars, left to right" }
+  cu.drive_down:         { ru: "↓ аллея", en: "↓ drive" }
+  cu.tape_day:           { ru: "{d} окт.", en: "{d} Oct" }
   cu.plinth_year:        { ru: "На постаменте: {year}", en: "On the plinth: {year}" }
   # --- блокнот ---
   nb.tab.case:           { ru: "Дело", en: "Case" }

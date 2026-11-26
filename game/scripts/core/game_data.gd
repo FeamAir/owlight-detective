@@ -55,6 +55,7 @@ func people_entry(id: String) -> Dictionary: return _entry("people", id)
 func sign_def(id: String) -> Dictionary: return _entry("signs", id)
 func line(id: String) -> Dictionary: return _entry("lines", id)
 func node(id: String) -> Dictionary: return nodes_by_id.get(id, {})
+func layout(id: String) -> Dictionary: return raw.get("layouts", {}).get(id, {})
 func has_line(id: String) -> bool: return raw.get("lines", {}).has(id)
 func ids(coll: String) -> Array: return raw.get(coll, {}).keys()
 

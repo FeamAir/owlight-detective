@@ -48,12 +48,24 @@ PZ-GATE-02:
     extra_docs: [SNAP-GATE-TAPE]   # выбираемые фрагменты снимка — отметки marks_14 / marks_15 (17:30, 23:10, 08:55), все ложные
     answer: { rain: [night_end], items_any: [top_dry, hat_dry], conclusion: D }
   conclusions: [A_all_night, B_before_rain, C_during_rain, D_after_rain]
-  all: { rain_end: "02:00", rain_end_words: { ru: "двух", en: "two" } }   # engine: параметры LOGIC-GATE-02 / CL-RAIN
+  all: { rain_end: "02:00", rain_end_words: { ru: "двух", en: "two" },   # engine: параметры LOGIC-GATE-02 / CL-RAIN
+         # engine: роли фрагментов для реакций (5.4, «Обратная связь»); фрагменты ленты и журнала без роли —
+         #   tape_wrong / journal, отметки ленты ворот (С) — decoy_doc
+         roles: { hem_damp: hem, puddle: rain_evidence, leaves_wet: rain_evidence, bucket_full: rain_evidence,
+                  coat_folded: folded, j14_forecast: decoy_doc } }
 PZ-GATE-03:
-  easy:   { departure: "07:40", duration_min: 120, snap_minutes: 10, target_time: "09:40" }
-  normal: { departure: "06:55", duration_min: 165, snap_minutes: 5,  target_time: "09:40" }
+  easy:   { departure: "07:40", duration_min: 120, snap_minutes: 10, target_time: "09:40",
+            logic_words: { ru: { departure: "Семь сорок", duration: "два часа", arrival: "девять сорок" },
+                           en: { departure: "Seven forty", duration: "two hours", arrival: "nine forty" } } }
+  normal: { departure: "06:55", duration_min: 165, snap_minutes: 5,  target_time: "09:40",
+            logic_words: { ru: { departure: "Без пяти семь", duration: "два сорок пять", arrival: "девять сорок" },
+                           en: { departure: "Six fifty-five", duration: "two hours forty-five", arrival: "nine forty" } } }
   hard:   { departure: "06:52", legs_min: [80, 6, 82], snap_minutes: 1, target_time: "09:40",
-            decoys: { ticket_no: "0915", wall_clock: "10:35" } }
+            decoys: { ticket_no: "0915", wall_clock: "10:35" },
+            logic_words: { ru: { departure: "Шесть пятьдесят две", duration: "два сорок восемь", arrival: "девять сорок" },
+                           en: { departure: "Six fifty-two", duration: "two hours forty-eight", arrival: "nine forty" } } }
+  # engine: logic_words — параметры шаблона LOGIC-GATE-03 ({departure}, {duration}, {arrival}) словами.
+  #   Н = канон 4.4; Л и С — черновик программиста, на вычитку сценаристу.
 IT-OWL:
   all: { owl_base_signs: [key, moon, owl, wave] }     # LL-1, [ТЕСТ]
 SNAP-GATE-TAPE:

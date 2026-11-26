@@ -119,3 +119,24 @@ static func dim_layer(alpha: float = 0.6) -> ColorRect:
 
 static func escape_bb(text: String) -> String:
 	return text.replace("[", "[lb]")
+
+
+## Largest font size (from start down to min_size, step 2) at which text wrapped to width fits max_h.
+## Used for cards with variable text (logic line, reactions) so they fit 1600×720 and narrower layouts.
+static func fit_font_size(text: String, width: float, max_h: float, start: int = FONT_SUB, min_size: int = 22, font: Font = null) -> int:
+	var f: Font = font if font != null else ThemeDB.fallback_font
+	var s := start
+	while s > min_size:
+		if text_height(text, width, s, f) <= max_h:
+			return s
+		s -= 2
+	return min_size
+
+
+## Height of text wrapped to width at a font size (+ Label line spacing reserve).
+static func text_height(text: String, width: float, size: int, font: Font = null) -> float:
+	var f: Font = font if font != null else ThemeDB.fallback_font
+	var h := 0.0
+	for para in text.split("\n"):
+		h += f.get_multiline_string_size(para if para != "" else " ", HORIZONTAL_ALIGNMENT_LEFT, maxf(1.0, width), size).y
+	return h * 1.08 + 4.0

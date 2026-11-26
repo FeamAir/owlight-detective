@@ -5,7 +5,8 @@
 #
 # КАНОН ТЕКСТОВ — docs/levels/slice-01-spec.md, разделы 4 и 7.3. Тексты сюда переносит
 #   python3 game/tools/sync_lines_from_spec.py
-# Здесь правьте только служебные поля (говорящий, эмоция, стиль, аудио) — тексты перезапишутся из спецификации.
+# Здесь правьте только служебные поля (говорящий, эмоция, стиль, аудио, template_ru/en для реплик-шаблонов,
+# где значения зависят от уровня) — тексты text_ru/text_en перезапишутся из спецификации.
 lines:
   - line_id: DLG-INTRO-001
     speaker_id: TARN
@@ -514,12 +515,12 @@ lines:
     params:
     - pillars
     - levels
+    template_ru: '{pillars} — по столбам слева направо. В их чашах вода на {levels}.'
+    template_en: '{pillars} — the pillars, left to right. Their bowls hold water at {levels}.'
     text_ru: Луна, Сова, Шестерня, Ключ — по столбам слева направо. В их чашах вода на трёх, семи, пяти и шести.
     text_en: Moon, Owl, Gear, Key — the pillars, left to right. Their bowls hold water at three, seven, five and six.
     audio_ru: null
     audio_en: null
-    template_ru: '{pillars} — по столбам слева направо. В их чашах вода на {levels}.'
-    template_en: '{pillars} — the pillars, left to right. Their bowls hold water at {levels}.'
   - line_id: FB-GATE01-E1
     speaker_id: CLARA
     style: thought
@@ -606,6 +607,12 @@ lines:
     speaker_id: CLARA
     style: thought
     status: approved
+    params:
+    - departure
+    - duration
+    - arrival
+    template_ru: '{departure} и ещё {duration} в пути — поезд пришёл в {arrival}. Тарн ждал меня.'
+    template_en: '{departure}, plus {duration} on the way — the train got in at {arrival}. Tarn was expecting me.'
     text_ru: Без пяти семь и ещё два сорок пять в пути — поезд пришёл в девять сорок. Тарн ждал меня.
     text_en: Six fifty-five, plus two hours forty-five on the way — the train got in at nine forty. Tarn was expecting me.
     audio_ru: null
