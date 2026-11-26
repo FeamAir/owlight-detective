@@ -38,16 +38,17 @@ PZ-GATE-02:
     answer: { rain: [night], items_any: [top_dry, hat_dry], conclusion: D }
   hard:
     tape: { from: "10 Oct 00:00", to: "15 Oct 10:00", hour_labels_every: 6, legend: journal,
-            segments: [ { id: r10, kind: rain, from: "10 Oct 06:00", to: "10 Oct 09:00", height: high },
+            segments: [ { id: r10, kind: rain, from: "10 Oct 06:00", to: "10 Oct 09:00", height: medium },
                         { id: r12, kind: rain, from: "12 Oct 14:00", to: "12 Oct 16:30", height: low },
                         { id: night_start, kind: rain_start, at: "14 Oct 23:15" },
                         { id: night_mid,   kind: rain, from: "14 Oct 23:15", to: "15 Oct 02:00" },
                         { id: night_end,   kind: rain_end, at: "15 Oct 02:00" } ] }
     journal: [j10_rain, j11_dry, j12_rain, j13_dry, j14_dry, j14_forecast]
     notes: [coat_folded, hat_dry, top_dry, hem_damp, puddle, leaves_wet, bucket_full]
-    extra_docs: [SNAP-GATE-TAPE]
+    extra_docs: [SNAP-GATE-TAPE]   # выбираемые фрагменты снимка — отметки marks_14 / marks_15 (17:30, 23:10, 08:55), все ложные
     answer: { rain: [night_end], items_any: [top_dry, hat_dry], conclusion: D }
   conclusions: [A_all_night, B_before_rain, C_during_rain, D_after_rain]
+  all: { rain_end: "02:00", rain_end_words: { ru: "двух", en: "two" } }   # engine: параметры LOGIC-GATE-02 / CL-RAIN
 PZ-GATE-03:
   easy:   { departure: "07:40", duration_min: 120, snap_minutes: 10, target_time: "09:40" }
   normal: { departure: "06:55", duration_min: 165, snap_minutes: 5,  target_time: "09:40" }
@@ -56,4 +57,4 @@ PZ-GATE-03:
 IT-OWL:
   all: { owl_base_signs: [key, moon, owl, wave] }     # LL-1, [ТЕСТ]
 SNAP-GATE-TAPE:
-  all: { marks_14: ["17:30", "23:10"], marks_15: null }   # 15 октября — вопрос сценаристу 5
+  all: { marks_14: ["17:30", "23:10"], marks_15: ["08:55"] }   # 08:55 — Марта едет на станцию [ТЕСТ], библия 6.2

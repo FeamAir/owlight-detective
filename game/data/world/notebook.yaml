@@ -13,7 +13,7 @@ documents:
       lines_from_targets: true }
 snapshots:
   - { id: SNAP-OWL-BASE,     asset: item_owl_base, auto: all, title: snap.owl_base }
-  - { id: SNAP-GATE-TAPE,    asset: doc_gate_tape, auto: all, params: { marks_14: ["17:30", "23:10"] }, title: snap.gate_tape }
+  - { id: SNAP-GATE-TAPE,    asset: doc_gate_tape, auto: all, params: { marks_14: ["17:30", "23:10"], marks_15: ["08:55"] }, title: snap.gate_tape }
   - { id: SNAP-WEATHER-TAPE, asset: doc_weather_tape, auto: all, params_from: values.PZ-GATE-02, title: snap.weather_tape }
   - { id: SNAP-PILLARS,      asset: cu_gate_pillars, auto: easy, title: snap.pillars }          # engine: autosnap Л у столбов
   - { id: SNAP-FOUNTAIN,     asset: cu_alley_fountain, auto: easy, title: snap.fountain }       # engine: autosnap Л у фонтана

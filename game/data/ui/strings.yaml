@@ -123,7 +123,9 @@ strings:
   nb.people:             { ru: "Люди", en: "People" }
   nb.empty:              { ru: "Пока пусто.", en: "Nothing yet." }
   nb.may_be_useful:      { ru: "(может пригодиться)", en: "(may be useful)" }
-  nb.investigator:       { ru: "Клара Вест, 34. Следователь страхового общества «Атлас». Тарн просил прислать именно её.", en: "Clara West, 34. Investigator for the Atlas insurance society. Tarn asked for her by name." }
+  UI-CASE-01:            { ru: "Клара Вест. Следователь страхового общества «Атлас».", en: "Clara West. Investigator, Atlas Assurance." }
+  UI-CASE-02:            { ru: "Приехала 15 октября по письму А. Тарна.", en: "Arrived 15 October, at A. Tarn's request." }
+  UI-CASE-03:            { ru: "Задача: установить, что случилось с Тарном.", en: "Task: establish what has happened to Tarn." }
   # --- сумка ---
   bag.title:             { ru: "Сумка", en: "Bag" }
   bag.hint:              { ru: "Коснитесь вещи — выбрать, ещё раз — рассмотреть", en: "Tap an item to select, tap again to examine" }
@@ -132,7 +134,7 @@ strings:
   goal.g01:              { ru: "Осмотреть сторожку", en: "Search the gatehouse" }
   goal.g02:              { ru: "Найти запасной ключ от кабинета", en: "Find the spare key to the study" }
   goal.g03:              { ru: "Открыть кабинет Тарна", en: "Open Tarn's study" }
-  goal.s01:              { ru: "Пальто у озера", en: "The coat by the lake" }
+  goal.s01:              { ru: "Осмотреть пальто на мостках", en: "Examine the coat on the pier" }
   goal.s02:              { ru: "Пальто сухое. Когда его принесли?", en: "The coat is dry. When was it brought?" }
   goal.s03:              { ru: "Кто-то принёс пальто к озеру", en: "Someone brought the coat to the lake" }
   # --- вопросы (7.2) ---
@@ -158,13 +160,13 @@ strings:
   doc.ticket.hard:       { ru: "Железная дорога. Билет пассажирский.\n15 октября. Утренний.\nОтправление: 06:52.\nГород — Узловая: 1 ч 20 мин.\nСтоянка на Узловой: 6 мин.\nУзловая — Совиный Холм: 1 ч 22 мин.\nБилет № 0915. Вагон 3, место 24.", en: "Railway. Passenger ticket.\n15 October. Morning.\nDeparture: 06:52.\nCity — Junction: 1 h 20 min.\nStop at Junction: 6 min.\nJunction — Owl Hill: 1 h 22 min.\nTicket No. 0915. Carriage 3, seat 24." }
   doc.weather_log.easy:  { ru: "Метеожурнал. Переписано с ленты.\n12 окт.  Дождь с 14:00 до 16:30, небольшой. Ветер с озера.\n13 окт.  Сухо. Ветер с дороги. Туман до полудня.\n14 окт.  Сухо. Ветер с озера, к вечеру крепче.", en: "Weather log. Copied from the tape.\n12 Oct.  Rain 14:00 to 16:30, light. Wind off the lake.\n13 Oct.  Dry. Wind from the road. Fog till noon.\n14 Oct.  Dry. Wind off the lake, stronger by evening." }
   doc.weather_log.normal: { ru: "Метеожурнал. Переписано с ленты.\n12 окт.  Дождь с 14:00 до 16:30, небольшой. Ветер с озера.\n13 окт.  Сухо. Ветер с дороги. Туман до полудня.\n14 окт.  Сухо. Ветер с озера, к вечеру крепче.", en: "Weather log. Copied from the tape.\n12 Oct.  Rain 14:00 to 16:30, light. Wind off the lake.\n13 Oct.  Dry. Wind from the road. Fog till noon.\n14 Oct.  Dry. Wind off the lake, stronger by evening." }
-  doc.weather_log.hard:  { ru: "Метеожурнал. Переписано с ленты.\n10 окт.  Дождь с 06:00 до 09:00. [черновик]\n11 окт.  Сухо. [черновик]\n12 окт.  Дождь с 14:00 до 16:30, небольшой. Ветер с озера.\n13 окт.  Сухо. Ветер с дороги. Туман до полудня.\n14 окт.  Сухо. Ветер с озера, к вечеру крепче. К ночи, похоже, польёт.", en: "Weather log. Copied from the tape.\n10 Oct.  Rain 06:00 to 09:00. [draft]\n11 Oct.  Dry. [draft]\n12 Oct.  Rain 14:00 to 16:30, light. Wind off the lake.\n13 Oct.  Dry. Wind from the road. Fog till noon.\n14 Oct.  Dry. Wind off the lake, stronger by evening. Looks like rain by night." }
+  doc.weather_log.hard:  { ru: "Метеожурнал. Переписано с ленты.\n10 окт.  Дождь с 06:00 до 09:00. Ветер с дороги.\n11 окт.  Сухо. Ветер с озера.\n12 окт.  Дождь с 14:00 до 16:30, небольшой. Ветер с озера.\n13 окт.  Сухо. Ветер с дороги. Туман до полудня.\n14 окт.  Сухо. Ветер с озера, к вечеру крепче. К ночи, похоже, польёт.", en: "Weather log. Copied from the tape.\n10 Oct.  Rain 06:00 to 09:00. Wind from the road.\n11 Oct.  Dry. Wind off the lake.\n12 Oct.  Rain 14:00 to 16:30, light. Wind off the lake.\n13 Oct.  Dry. Wind from the road. Fog till noon.\n14 Oct.  Dry. Wind off the lake, stronger by evening. Looks like rain by night." }
   doc.pier_notes.easy:   { ru: "1. Пальто сложено у последней сваи.\n2. Шляпа лежит на пальто — сухая целиком.\n3. Верх пальто сухой, ворс торчит.\n4. По нижнему краю пальто — подмокшая полоса.\n5. В выемке доски — лужица.", en: "1. Coat folded by the last post.\n2. Hat on the coat — completely dry.\n3. Top of the coat dry, nap standing up.\n4. A damp band along the bottom edge.\n5. A puddle in a dip in the boards." }
   doc.pier_notes.normal: { ru: "1. Пальто сложено у последней сваи.\n2. Шляпа лежит на пальто — сухая целиком.\n3. Верх пальто сухой, ворс торчит.\n4. По нижнему краю пальто — подмокшая полоса.\n5. В выемке доски — лужица.\n6. Листья по всему настилу мокрые.\n7. Ведро под жёлобом сарая — полное до края.", en: "1. Coat folded by the last post.\n2. Hat on the coat — completely dry.\n3. Top of the coat dry, nap standing up.\n4. A damp band along the bottom edge.\n5. A puddle in a dip in the boards.\n6. Wet leaves all over the decking.\n7. Bucket under the boathouse gutter — full to the brim." }
   doc.pier_notes.hard:   { ru: "1. Пальто сложено у последней сваи.\n2. Шляпа лежит на пальто — сухая целиком.\n3. Верх пальто сухой, ворс торчит.\n4. По нижнему краю пальто — подмокшая полоса.\n5. В выемке доски — лужица.\n6. Листья по всему настилу мокрые.\n7. Ведро под жёлобом сарая — полное до края.", en: "1. Coat folded by the last post.\n2. Hat on the coat — completely dry.\n3. Top of the coat dry, nap standing up.\n4. A damp band along the bottom edge.\n5. A puddle in a dip in the boards.\n6. Wet leaves all over the decking.\n7. Bucket under the boathouse gutter — full to the brim." }
   # --- снимки и коды ---
   snap.owl_base:         { ru: "Донце совы", en: "Base of the owl" }
-  snap.gate_tape:        { ru: "Лента самописца ворот: 14 окт. — 17:30, 23:10", en: "Gate recorder tape: 14 Oct — 17:30, 23:10" }
+  snap.gate_tape:        { ru: "Лента самописца ворот: 14 окт. — 17:30, 23:10; 15 окт. — 08:55", en: "Gate recorder tape: 14 Oct — 17:30, 23:10; 15 Oct — 08:55" }
   snap.weather_tape:     { ru: "Лента погодного самописца", en: "Weather recorder tape" }
   snap.pillars:          { ru: "Столбы ворот", en: "Gate pillars" }
   snap.fountain:         { ru: "Чаши фонтана", en: "Fountain bowls" }
@@ -207,3 +209,14 @@ strings:
   speaker.FELIX:         { ru: "Феликс", en: "Felix" }
   speaker.TARN:          { ru: "Тарн", en: "Tarn" }
   slice.01.title:        { ru: "Ворота, сторожка, аллея и мостки", en: "Gate, gatehouse, drive and pier" }
+  # --- числа словами для шаблонов показа логики («вода на трёх») ---
+  num.loc.1:             { ru: "одном", en: "one" }
+  num.loc.2:             { ru: "двух", en: "two" }
+  num.loc.3:             { ru: "трёх", en: "three" }
+  num.loc.4:             { ru: "четырёх", en: "four" }
+  num.loc.5:             { ru: "пяти", en: "five" }
+  num.loc.6:             { ru: "шести", en: "six" }
+  num.loc.7:             { ru: "семи", en: "seven" }
+  num.loc.8:             { ru: "восьми", en: "eight" }
+  num.loc.9:             { ru: "девяти", en: "nine" }
+  list.and:              { ru: " и ", en: " and " }
