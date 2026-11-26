@@ -1,0 +1,211 @@
+# Все реплики, мысли, подсказки, показ логики и реакции на ошибку (решение №11).
+# Поля: line_id, speaker_id, emotion, style (speech / thought / sound), status, text_ru, text_en, audio_ru, audio_en.
+# status: approved_ru (библия), test (test-set-01), draft (черновик левел-дизайна), needed (текста нет).
+# text_en: null → в сборке на EN показывается RU с пометкой [EN]. text_ru: null → [TEXT NEEDED: <id>].
+# Источник текстов: docs/story/story-bible.md (5, 8, 13), docs/levels/slice-01-spec.md (4, 5, 7.3).
+# Сценарист правит тексты здесь (или в спецификации — тогда перенести сюда).
+lines:
+  # ---------- Пролог, кадр П-1 ----------
+  - line_id: DLG-INTRO-001
+    speaker_id: TARN
+    style: letter
+    status: approved_ru
+    text_ru: |-
+      Клара,
+      помните ярмарку и заводную сову? Вы тогда сказали, что она смотрит. Я ответил: это вы умеете смотреть.
+      С тех пор вы научились ещё и считать. Мне нужно и то и другое.
+      Я написал в ваше общество и просил прислать именно вас.
+      Приезжайте пятнадцатого октября утренним поездом, билет внутри.
+      Если меня не будет на платформе, значит, я был прав и мне не дали дождаться.
+      Тогда не ищите меня там, где будут искать все. Ответы в доме.
+      Сову возьмите с собой.
+      А. Т.
+    text_en: null
+    audio_ru: null
+    audio_en: null
+  - { line_id: DLG-INTRO-002, speaker_id: CLARA, emotion: thoughtful, style: thought, status: approved_ru,
+      text_ru: "Двадцать шесть лет ни слова. И вдруг — билет.", text_en: null, audio_ru: null, audio_en: null }
+  # ---------- Кадр П-3: станция ----------
+  - { line_id: DLG-INTRO-003, speaker_id: MARTHA, emotion: neutral, style: speech, status: approved_ru,
+      text_ru: "Госпожа Вест? Из страхового общества?", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-004, speaker_id: CLARA, emotion: calm, style: speech, status: approved_ru,
+      text_ru: "Она самая. А где господин Тарн?", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-005, speaker_id: MARTHA, emotion: upset, style: speech, status: approved_ru,
+      text_ru: "Потому я здесь, а не он. В семь утра кабинет пуст. Постель не тронута.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-006, speaker_id: CLARA, emotion: calm, style: speech, status: approved_ru,
+      text_ru: "Полиция знает?", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-007, speaker_id: MARTHA, emotion: neutral, style: speech, status: approved_ru,
+      text_ru: "Звонили. Инспектор говорит: старики любят гулять. Велит ждать двое суток.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-008, speaker_id: CLARA, emotion: calm, style: speech, status: approved_ru,
+      text_ru: "А вы что думаете?", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-009, speaker_id: MARTHA, emotion: neutral, style: speech, status: approved_ru,
+      text_ru: "Сорок лет служу в этом доме. Хозяин не уходит, не допив чай.", text_en: null, audio_ru: null, audio_en: null }
+  # ---------- Кадр П-4: машина ----------
+  - { line_id: DLG-INTRO-010, speaker_id: CLARA, emotion: calm, style: speech, status: approved_ru,
+      text_ru: "Как вы меня узнали?", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-011, speaker_id: MARTHA, emotion: neutral, style: speech, status: approved_ru,
+      text_ru: "Вчера он показал мне газету с вашим снимком. Сказал: «Если утром меня не будет, встретишь её с поезда».", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-012, speaker_id: MARTHA, emotion: neutral, style: speech, status: approved_ru,
+      text_ru: "Я решила, шутит.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-013, speaker_id: CLARA, emotion: thoughtful, style: thought, status: approved_ru,
+      text_ru: "Газета с моим снимком. Значит, он за мной следил.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-014, speaker_id: CLARA, emotion: calm, style: speech, status: approved_ru,
+      text_ru: "Кто ночевал в доме?", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-015, speaker_id: MARTHA, emotion: neutral, style: speech, status: approved_ru,
+      text_ru: "Дочь, Вероника. Племянник, Юлиан. Доктор Корд. Барышня Ида, что пишет каталог. И секретарь, Феликс Ром.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-016, speaker_id: MARTHA, emotion: neutral, style: speech, status: approved_ru,
+      text_ru: "Только Феликс ездил вечером в город. Вернулся последним автобусом.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-028, speaker_id: MARTHA, emotion: neutral, style: speech, status: needed,
+      text_ru: null, text_en: null, audio_ru: null, audio_en: null,
+      note: "о пальто на мостках; кто и как его видел (вопрос сценаристу 1)" }
+  - { line_id: DLG-INTRO-029, speaker_id: CLARA, emotion: thoughtful, style: thought, status: draft,
+      text_ru: "Пальто. Значит, все решат, что он ушёл к воде.", text_en: null, audio_ru: null, audio_en: null }
+  # ---------- Кадр П-5: дорога вдоль озера ----------
+  - { line_id: DLG-INTRO-017, speaker_id: CLARA, emotion: calm, style: speech, status: approved_ru,
+      text_ru: "Башенные часы стоят?", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-018, speaker_id: MARTHA, emotion: neutral, style: speech, status: approved_ru,
+      text_ru: "Давно. Хозяин никого туда не пускает.", text_en: null, audio_ru: null, audio_en: null }
+  # ---------- Разговор у ворот ----------
+  - { line_id: DLG-INTRO-019, speaker_id: VERONICA, emotion: neutral, style: speech, status: approved_ru,
+      text_ru: "Марта сказала, вы из страховой. Отец не мог выбрать день удачнее.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-020, speaker_id: CLARA, emotion: calm, style: speech, status: approved_ru,
+      text_ru: "Он выбрал его неделю назад.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-021, speaker_id: VERONICA, emotion: guarded, style: speech, status: approved_ru,
+      text_ru: "Полиция считает, что он гуляет. Мне хочется в это верить.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-022, speaker_id: CLARA, emotion: calm, style: speech, status: approved_ru,
+      text_ru: "Тогда помогу вам в этом убедиться. Или нет.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-023, speaker_id: FELIX, emotion: smile, style: speech, status: approved_ru,
+      text_ru: "Феликс Ром, секретарь. Ключи, бумаги, расписание — всё ко мне.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-024, speaker_id: FELIX, emotion: guarded, style: speech, status: approved_ru,
+      text_ru: "Страховая проверка? Странно. Хозяин мне не говорил.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-025, speaker_id: FELIX, emotion: smile, style: speech, status: approved_ru,
+      text_ru: "Кабинет, увы, заперт. Ключ хозяин носит с собой.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-027, speaker_id: FELIX, emotion: smile, style: speech, status: approved_ru,
+      text_ru: "Запасные — в ящике в сторожке. Но на днях хозяин сменил код ящика. Мне не сказал.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-INTRO-026, speaker_id: CLARA, emotion: thoughtful, style: thought, status: approved_ru,
+      text_ru: "Ворота видят всех, кто уходит ночью. Начну отсюда.", text_en: null, audio_ru: null, audio_en: null }
+
+  # ---------- Осмотр, границы, состояния (4.3) — мысли Клары ----------
+  - { line_id: DLG-GATE-001, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Четыре столба, четыре знака. Ворота с характером.", text_en: "Four pillars, four signs. A gate with character.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-GATE-002, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Барабаны с цифрами. Над ними — столбики с чашами.", text_en: "Number drums. Above them, little pillars with bowls.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-GATE-003, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "На станцию мне не нужно. Всё, что нужно, — здесь.", text_en: "I've no business at the station. Everything I need is here.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-GATE-004, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Сторожа нет. Зато два самописца.", text_en: "No gatekeeper. Two recorders instead.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-GATE-005, speaker_id: CLARA, style: thought, status: test,
+      text_ru: "Ворота открывали в 23:10. Ушёл?", text_en: "The gate opened at 23:10. Did he leave?", audio_ru: null, audio_en: null }
+  - { line_id: DLG-GATE-006, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Дождемер и флюгер. Лента тянется до самого утра.", text_en: "A rain gauge and a vane. The tape runs right up to this morning.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-GATE-007, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Почерк Тарна. Он переписывал сюда ленту — каждый вечер. Последний вечер — четырнадцатое.", text_en: "Tarn's hand. He copied the tape here every evening. The last evening was the fourteenth.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-GLASS-001, speaker_id: CLARA, style: thought, status: approved_ru,
+      text_ru: "Мелкий почерк. Хорошо, что очки при мне. Почти лупа.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: DLG-GATE-008, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "«Для гостя с поезда». Гость с поезда — это я.", text_en: "'For the guest off the train.' That's me.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-GATE-009, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Ключ с биркой «Кабинет». Тарн оставил его для меня.", text_en: "A key tagged 'Study'. Tarn left it for me.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-GATE-010, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Пальто сухое. А лента помнит ночь.", text_en: "The coat is dry. The tape remembers the night.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-GATE-011, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Ходики. Идут.", text_en: "A wall clock. Still ticking.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-001, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Фонтан с совой. У каждой чаши свой знак.", text_en: "A fountain with an owl. Each bowl has its own sign.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-002, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Вода стоит вровень со сливом. Дождь её не сбил.", text_en: "The water sits level with the drain. The rain didn't change it.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-003, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Полна через край. Когда её вылили в последний раз?", text_en: "Full to overflowing. When was it last emptied?", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-004, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Ни ручки, ни скважины. Заперто изнутри?", text_en: "No handle, no keyhole. Bolted from inside?", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-005, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Дом подождёт. Сначала — то, что видели ворота.", text_en: "The house can wait. First, what the gate saw.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-006, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Ключ у меня. Теперь — кабинет.", text_en: "I have the key. Now, the study.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-007, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "В доме меня ждут. Но снаружи я ещё не всё проверила.", text_en: "They're waiting in the house. But I haven't checked everything out here.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-008, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Сад потом. Сначала — ворота и озеро.", text_en: "The garden later. First the gate and the lake.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-009, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Мокрый гравий. У самого дома всё затоптано.", text_en: "Wet gravel. Trampled all over near the house.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-010, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Кто-то принёс пальто к озеру. Тропа должна это помнить.", text_en: "Someone carried that coat to the lake. The path should remember.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-011, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Пойду по траве. Гравий пусть останется как есть.", text_en: "I'll keep to the grass. Leave the gravel as it is.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-ALLEY-012, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Дверь кабинета на террасу. Заперто. Постель в алькове не тронута.", text_en: "The study's terrace door. Locked. The bed in the alcove hasn't been slept in.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-PIER-001, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Туман над водой. А в конце мостков — пальто.", text_en: "Mist over the water. And a coat at the end of the pier.", audio_ru: null, audio_en: null }
+  - { line_id: DLG-PIER-002, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Навесной замок. Ключа у меня нет.", text_en: "A padlock. I don't have the key.", audio_ru: null, audio_en: null }
+
+  # ---------- PZ-GATE-01: показ логики и реакции на ошибку ----------
+  - { line_id: LOGIC-GATE-01, speaker_id: CLARA, style: thought, status: test,
+      params: [pillars, levels],
+      text_ru: "{pillars} — по столбам слева направо. В их чашах вода на {levels}.",
+      text_en: "{pillars} — the pillars, left to right. Their bowls hold water at {levels}.",
+      note: "шаблон; в test-set: «Луна, Сова, Шестерня, Ключ … на трёх, семи, пяти и шести»", audio_ru: null, audio_en: null }
+  - { line_id: FB-GATE01-E1, speaker_id: CLARA, style: thought, status: test,
+      text_ru: "Цифры те, что в чашах. А порядок? Барабаны стоят в ряд, как что-то у ворот.", text_en: "The numbers are the ones in the bowls. But the order? The drums stand in a row, like something at the gate.", audio_ru: null, audio_en: null }
+  - { line_id: FB-GATE01-E2, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Таких уровней воды в чашах нет. Над барабанами нарисованы чаши, а не номера знаков.", text_en: "No bowl holds water at those levels. Above the drums there are bowls, not sign numbers.", audio_ru: null, audio_en: null }
+  - { line_id: FB-GATE01-E3, speaker_id: CLARA, style: thought, status: test,
+      text_ru: "Не все эти цифры есть в чашах фонтана.", text_en: "Not all of these numbers are in the fountain's bowls.", audio_ru: null, audio_en: null }
+  - { line_id: FB-GATE01-E4, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Над барабанами — столбики с чашами. Порядок задают они.", text_en: "Above the drums — little pillars with bowls. They set the order.", audio_ru: null, audio_en: null }
+  - { line_id: FB-GATE01-N1, speaker_id: CLARA, style: thought, status: test,
+      text_ru: "Цифры, кажется, правильные. Что-то с порядком.", text_en: "The numbers seem right. Something's off with the order.", audio_ru: null, audio_en: null }
+  - { line_id: FB-GATE01-N2, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Над барабанами нарисованы чаши. При чём тут номера знаков?", text_en: "There are bowls drawn above the drums. What have sign numbers got to do with it?", audio_ru: null, audio_en: null }
+  - { line_id: FB-GATE01-N3, speaker_id: CLARA, style: thought, status: test,
+      text_ru: "Не сходится с фонтаном.", text_en: "It doesn't match the fountain.", audio_ru: null, audio_en: null }
+
+  # ---------- Показ логики остальных головоломок (в срезе пока — заглушки экранов) ----------
+  - { line_id: LOGIC-PIER-01, speaker_id: CLARA, style: thought, status: test,
+      text_ru: "Сверху сухое, снизу подмокло. Его положили на мокрые доски, когда дождь уже кончился.", text_en: "Dry on top, damp beneath. It was laid on wet boards after the rain had stopped.", audio_ru: null, audio_en: null }
+  - { line_id: LOGIC-ALLEY-01, speaker_id: CLARA, style: thought, status: draft,
+      text_ru: "Края острые, воды в отпечатках нет — как в утренней колее. Кто-то прошёл после дождя: к мосткам и обратно.", text_en: "Sharp edges, no water in the prints — like this morning's tyre ruts. Someone walked here after the rain: to the pier and back.", audio_ru: null, audio_en: null }
+  - { line_id: LOGIC-GATE-02, speaker_id: CLARA, style: thought, status: draft, params: [rain_end],
+      text_ru: "Лента: ночной дождь кончился около {rain_end}. А верх пальто сухой — под дождём оно не лежало. Его принесли потом.", text_en: "The tape: the night rain stopped around {rain_end}. But the top of the coat is dry — it never lay in the rain. It was brought later.", audio_ru: null, audio_en: null }
+  - { line_id: LOGIC-GATE-03, speaker_id: CLARA, style: thought, status: test,
+      text_ru: "Без пяти семь и ещё два сорок пять в пути — поезд пришёл в девять сорок. Тарн ждал меня.", text_en: "Six fifty-five plus two forty-five on the road — the train arrived at nine forty. Tarn was expecting me.", audio_ru: null, audio_en: null }
+
+  # ---------- «Мысли»: общие фразы (библия 8) ----------
+  - { line_id: HINT-WAIT-01, speaker_id: CLARA, style: thought, status: approved_ru, text_ru: "Так, надо подумать… Дай мне пару минут.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: HINT-WAIT-02, speaker_id: CLARA, style: thought, status: approved_ru, text_ru: "Не спешить. Пройдусь ещё раз — мысль догонит.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: HINT-WAIT-03, speaker_id: CLARA, style: thought, status: approved_ru, text_ru: "Что-то я упустила. Сейчас вспомню.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: HINT-WAIT-BUSY, speaker_id: CLARA, style: thought, status: approved_ru, text_ru: "Я ещё думаю. Пока посмотрю вокруг.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: HINT-READY-01, speaker_id: CLARA, style: thought, status: approved_ru, text_ru: "Вот. Кажется, я поняла, куда дальше.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: HINT-SELF-01, speaker_id: CLARA, style: thought, status: approved_ru, text_ru: "А, уже не нужно. Сама разобралась.", text_en: null, audio_ru: null, audio_en: null }
+  # ---------- «Мысли»: навигация по узлам среза (7.3) ----------
+  - { line_id: HINT-EX-01, speaker_id: CLARA, style: thought, status: approved_ru, text_ru: "Ворота видят всех, кто уходит ночью. Сначала осмотрю сторожку.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE01-A2, speaker_id: CLARA, style: thought, status: test, text_ru: "Ворота видят всех. Сначала — сторожка.", text_en: "The gate sees everyone. The gatehouse first.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE01-P1, speaker_id: CLARA, style: thought, status: test, text_ru: "Дверь сторожки на кодовом замке. Надо понять, откуда цифры.", text_en: "The gatehouse has a combination lock. Where do its numbers come from?", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE01-P2, speaker_id: CLARA, style: thought, status: draft, text_ru: "Сторожка заперта на код. Тарн любил загадки для гостей.", text_en: "The gatehouse is locked with a code. Tarn liked puzzles for his guests.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE01-R, speaker_id: CLARA, style: thought, status: test, text_ru: "Для этого замка у меня всё есть. Подумаю ещё раз.", text_en: "I have all I need for this lock. Think again.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE01-M, speaker_id: CLARA, style: thought, status: test, text_ru: "Мне чего-то не хватает. Я ещё не всё осмотрела у ворот и на аллее.", text_en: "Something's missing. I haven't looked around the gate and the drive yet.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-EX-02, speaker_id: CLARA, style: thought, status: approved_ru, text_ru: "Кабинет заперт. А запасные ключи обычно держат там, где сторожат ворота.", text_en: null, audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE03-A2, speaker_id: CLARA, style: thought, status: draft, text_ru: "Запасной ключ где-то есть. Феликс говорил про ящик.", text_en: "There's a spare key somewhere. Felix mentioned a box.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE03-P1, speaker_id: CLARA, style: thought, status: test, text_ru: "Ящик с ключами в сторожке. Какое время он ждёт?", text_en: "The key box in the gatehouse. What time is it waiting for?", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE03-P2, speaker_id: CLARA, style: thought, status: draft, text_ru: "Часовой замок на ящике. Для кого Тарн его настроил?", text_en: "A clock lock on the box. Who did Tarn set it for?", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE03-R, speaker_id: CLARA, style: thought, status: test, text_ru: "Всё, что нужно, у меня с собой. Подумаю ещё.", text_en: "I've got everything with me. Think again.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE03-M, speaker_id: CLARA, style: thought, status: test, text_ru: "Сначала надо попасть в сторожку.", text_en: "First I need to get into the gatehouse.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-PIER01-A1, speaker_id: CLARA, style: thought, status: test, text_ru: "Марта говорила о пальто у озера.", text_en: "Martha mentioned a coat by the lake.", audio_ru: null, audio_en: null, note: "зависит от DLG-INTRO-028" }
+  - { line_id: HINT-NAV-PIER01-A2, speaker_id: CLARA, style: thought, status: draft, text_ru: "У озера я ещё не была.", text_en: "I haven't been down to the lake yet.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-PIER01-P1, speaker_id: CLARA, style: thought, status: test, text_ru: "Мостки. Надо осмотреть всё, что там лежит.", text_en: "The pier. I should check everything lying there.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-PIER01-P2, speaker_id: CLARA, style: thought, status: draft, text_ru: "Пальто на мостках. Осмотреть его и всё вокруг.", text_en: "The coat on the pier. Check it and everything around it.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-PIER01-R, speaker_id: CLARA, style: thought, status: test, text_ru: "Я ещё не всё отметила на мостках.", text_en: "I haven't marked everything on the pier yet.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-ALLEY01-A1, speaker_id: CLARA, style: thought, status: draft, text_ru: "Кто-то принёс пальто к озеру. Не по воздуху же.", text_en: "Someone brought the coat to the lake. Not through the air.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-ALLEY01-A2, speaker_id: CLARA, style: thought, status: draft, text_ru: "Тропа к озеру. Гравий мог что-то сохранить.", text_en: "The path to the lake. The gravel may have kept something.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-ALLEY01-P1, speaker_id: CLARA, style: thought, status: draft, text_ru: "Гравий у развилки к озеру. Что на нём осталось?", text_en: "The gravel at the fork to the lake. What's left on it?", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-ALLEY01-P2, speaker_id: CLARA, style: thought, status: draft, text_ru: "Развилка у фонтана. Посмотреть на гравий внимательно.", text_en: "The fork by the fountain. A closer look at the gravel.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-ALLEY01-R, speaker_id: CLARA, style: thought, status: draft, text_ru: "Всё, что нужно, — на этом гравии.", text_en: "Everything I need is in this gravel.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-ALLEY01-M, speaker_id: CLARA, style: thought, status: draft, text_ru: "Сначала — пальто на мостках.", text_en: "The coat on the pier first.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE02-A1, speaker_id: CLARA, style: thought, status: draft, text_ru: "Пальто сухое. А какой была ночь? Тарн записывал погоду.", text_en: "The coat is dry. And what was the night like? Tarn kept a record of the weather.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE02-A2, speaker_id: CLARA, style: thought, status: draft, text_ru: "В сторожке есть самописец погоды. Что он помнит о той ночи?", text_en: "There's a weather recorder in the gatehouse. What does it remember of that night?", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE02-P1, speaker_id: CLARA, style: thought, status: draft, text_ru: "Самописец погоды в сторожке. Когда пальто попало на мостки?", text_en: "The weather recorder in the gatehouse. When did the coat get to the pier?", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE02-P2, speaker_id: CLARA, style: thought, status: draft, text_ru: "Лента в сторожке помнит ночь. А пальто — когда его положили?", text_en: "The tape remembers the night. And the coat — when was it put there?", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE02-R, speaker_id: CLARA, style: thought, status: draft, text_ru: "Всё нужное у меня в блокноте. Подумаю ещё раз.", text_en: "Everything I need is in my notebook. Think again.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-GATE02-M, speaker_id: CLARA, style: thought, status: draft, text_ru: "Сначала надо взглянуть на пальто у озера.", text_en: "First I should look at the coat by the lake.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-END-A1, speaker_id: CLARA, style: thought, status: draft, text_ru: "Ключ от кабинета у меня. Пора в дом.", text_en: "I have the key to the study. Time to go in.", audio_ru: null, audio_en: null }
+  - { line_id: HINT-NAV-END-P1, speaker_id: CLARA, style: thought, status: draft, text_ru: "Парадная дверь у фонтана. Кабинет Тарна ждёт.", text_en: "The front door by the fountain. Tarn's study is waiting.", audio_ru: null, audio_en: null }

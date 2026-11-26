@@ -1,0 +1,19 @@
+# Каркас 10.2 / дизайн 3.11. Значения [ТЕСТ].
+difficulty:
+  easy:
+    hint: { mode: instant }
+    highlight: shimmer            # Л — мерцание активных объектов
+    feedback: explain             # что именно неверно
+    seen_marks: true
+  normal:
+    hint: { mode: wait, wait_minutes: 5, precise_wait_minutes: 5, cancel_allowed: true, auto_cancel_on_progress: false }
+    highlight: look_around        # кнопка «Осмотреться» (в срезе пока не сделана)
+    feedback: count               # «Неверно. Верно N из M» / реплика
+    seen_marks: true
+  hard:
+    hint: { mode: none }
+    highlight: none
+    feedback: wrong_only
+    seen_marks: false
+debug:
+  hint_wait_seconds_fast: 10      # отладочное ускорение ожидания «Мыслей» (меню отладки)

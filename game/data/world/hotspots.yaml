@@ -1,0 +1,95 @@
+# Формат — slice-01-spec.md 8. Поля action.kind: closeup, puzzle, line, document, locked, slice_boundary.
+# engine: label_key — подпись зоны в отладочном режиме и в списке «неосмотренного».
+hotspots:
+  - id: HS-GATE-PILLARS
+    vp: VP-GATE-1
+    pos: { yaw: 0, pitch: 5, size_deg: 70 }
+    action: { kind: closeup, asset: cu_gate_pillars }
+    on_first: { line: DLG-GATE-001, set: [seen.pillars],
+                autosnap: { easy: true }, autocode: { easy: CODE-PILLARS-ORDER } }
+  - id: HS-GATE-LOCK
+    vp: VP-GATE-1
+    pos: { yaw: 30, pitch: -5, size_deg: 14 }
+    action: { kind: puzzle, puzzle: PZ-GATE-01 }
+    on_first: { line: DLG-GATE-002, set: [seen.lock_engraving] }
+    after_solved: { kind: exit, to: VP-GATE-2 }
+  - id: HS-GATE-ROAD
+    vp: VP-GATE-1
+    pos: { yaw: 180, pitch: -10, size_deg: 40 }
+    action: { kind: line, line: DLG-GATE-003 }
+  - id: HS-GATE-KEYBOX
+    vp: VP-GATE-2
+    pos: { yaw: 0, pitch: 0, size_deg: 18 }
+    action: { kind: puzzle, puzzle: PZ-GATE-03 }
+    on_first: { line: DLG-GATE-008, set: [seen.keybox_tag],
+                tutorial_if: { not_flag: seen.ticket, ui: UI-TUT-06 } }
+  - id: HS-GATE-WEATHERREC
+    vp: VP-GATE-2
+    pos: { yaw: 55, pitch: -15, size_deg: 14 }
+    action:
+      kind: closeup
+      asset: cu_gate_weatherrec
+      autosnap: { all: SNAP-WEATHER-TAPE }
+      states:
+        - { when: { not_flag: solved.PZ-PIER-01 }, line: DLG-GATE-006 }
+        - { when: { flag: solved.PZ-PIER-01 }, line_once: DLG-GATE-010, open_puzzle: PZ-GATE-02 }
+  - id: HS-GATE-WEATHERLOG
+    vp: VP-GATE-2
+    pos: { yaw: 70, pitch: -20, size_deg: 12 }
+    action: { kind: document, doc: DOC-WEATHER-LOG }
+    on_first: { lines: [DLG-GATE-007, DLG-GLASS-001] }
+  - id: HS-GATE-RECORDER
+    vp: VP-GATE-2
+    pos: { yaw: 310, pitch: -10, size_deg: 14 }
+    action: { kind: closeup, asset: cu_gate_recorder }
+    on_first: { line: DLG-GATE-005, give: [CL-GATE-2310], autosnap: { all: SNAP-GATE-TAPE },
+                question: Q-GATE-2310, long_link: { id: LL-5, role: source } }
+  - id: HS-GATE-WALLCLOCK
+    vp: VP-GATE-2
+    only_if: difficulty.hard
+    pos: { yaw: 95, pitch: 15, size_deg: 10 }
+    action: { kind: line, line: DLG-GATE-011 }
+  - id: HS-ALLEY-FOUNTAIN
+    vp: VP-ALLEY-1
+    pos: { yaw: 0, pitch: -10, size_deg: 30 }
+    action: { kind: closeup, asset: cu_alley_fountain, subviews: [bowl_owl, bowl_key, bowl_gear, bowl_moon] }
+    on_first: { line: DLG-ALLEY-002, set: [seen.fountain_levels],
+                autosnap: { easy: true }, autocode: { easy: CODE-FOUNTAIN-LEVELS } }
+  - id: HS-ALLEY-FRONTDOOR
+    vp: VP-ALLEY-1
+    pos: { yaw: 0, pitch: 8, size_deg: 12 }
+    action: { kind: slice_boundary }        # см. slice.boundary_exits
+  - id: HS-ALLEY-BARREL
+    vp: VP-ALLEY-1
+    pos: { yaw: 330, pitch: -10, size_deg: 10 }
+    action: { kind: closeup, asset: cu_alley_barrel }
+    on_first: { line: DLG-ALLEY-003, question: { id: Q-BARREL, levels: [easy, normal] } }
+  - id: HS-ALLEY-TOWERDOOR
+    vp: VP-ALLEY-1
+    pos: { yaw: 55, pitch: 0, size_deg: 10 }
+    action: { kind: locked, gate: GT-P13, line: DLG-ALLEY-004, question: Q-TOWER }
+  - id: HS-ALLEY-TERRACE                    # P3, можно отключить
+    vp: VP-ALLEY-1
+    optional: true
+    pos: { yaw: 75, pitch: 0, size_deg: 10 }
+    action: { kind: locked, gate: GT-P19, line: DLG-ALLEY-012, asset: cu_alley_terrace }
+  - id: HS-ALLEY-GARDENGATE
+    vp: VP-ALLEY-1
+    pos: { yaw: 110, pitch: 0, size_deg: 10 }
+    action: { kind: slice_boundary }
+  - id: HS-ALLEY-GRAVEL
+    vp: VP-ALLEY-1
+    pos: { yaw: 255, pitch: -25, size_deg: 30 }
+    visible_from: [ { vp: VP-PIER-1, yaw: 175, pitch: -15 } ]
+    action:
+      states:
+        - { when: { not_flag: solved.PZ-PIER-01 }, kind: line, line: DLG-ALLEY-009 }
+        - { when: { flag: solved.PZ-PIER-01 }, kind: puzzle, puzzle: PZ-ALLEY-01 }
+  - id: HS-PIER-SCENE
+    vp: VP-PIER-1
+    pos: { yaw: 0, pitch: -10, size_deg: 60 }
+    action: { kind: puzzle, puzzle: PZ-PIER-01 }
+  - id: HS-PIER-SHED
+    vp: VP-PIER-1
+    pos: { yaw: 300, pitch: -5, size_deg: 10 }
+    action: { kind: locked, gate: GT-P06, line: DLG-PIER-002, question: Q-SHED }

@@ -1,0 +1,10 @@
+items:
+  - { id: IT-OWL, name_key: item.owl, desc_key: item.owl.desc, slot_fixed: 1, removable: false, inspect: { asset: item_owl, sides: 4 },
+      details: [ { id: base, autosnap: SNAP-OWL-BASE, question: Q-OWL, long_link: { id: LL-1, role: source },
+                   param: owl_base_signs } ] }
+  - { id: IT-TICKET, name_key: item.ticket, desc_key: item.ticket.desc, inspect: { asset: doc_ticket, text_by_level: true },
+      on_inspect: { set: [seen.ticket], autocode: { easy: CODE-TICKET } },
+      consumed_by: [PZ-GATE-03], after_consumed: { to_doc: DOC-TICKET } }
+  - { id: IT-GLASSES, name_key: item.glasses, desc_key: item.glasses.desc, removable: false, inspect: { asset: item_glasses, sides: 1 } }
+  - { id: IT-STUDY-KEY, name_key: item.study_key, desc_key: item.study_key.desc, inspect: { asset: item_study_key, sides: 2 },
+      consumed_by: [GT-P18] }

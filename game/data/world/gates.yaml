@@ -1,0 +1,8 @@
+gates:
+  - { id: GT-P03, kind: puzzle, by: PZ-GATE-01, opens: [VP-GATE-2] }
+  - { id: GT-P18, kind: item,   by: IT-STUDY-KEY, opens: [VP-STUDY-1], outside_slice: true }
+  - { id: GT-P06, kind: item,   by: IT-ANCHOR-KEY, opens: [VP-SHED-1], outside_slice: true }
+  - { id: GT-P13, kind: event,  by: EV-EPILOGUE,  opens: [],           outside_slice: true }
+  - { id: GT-P19, kind: event,  by: vp.VP-STUDY-1, opens: [VP-ALLEY-1], outside_slice: true }  # открывается изнутри
+  - { id: GT-P04, kind: open,   slice_boundary: true }
+  - { id: GT-P08, kind: open,   slice_boundary: true }

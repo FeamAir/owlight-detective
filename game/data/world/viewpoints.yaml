@@ -1,0 +1,47 @@
+# engine: у перехода можно указать pitch метки (по умолчанию -22° — «на земле»)
+# engine: overlays — слой деталей поверх фона (знаки, цифры, надписи). Рисуется движком,
+#         значения берутся из values/<profile>.yaml по уровню сложности. Фон-картинка их не содержит.
+#         sign: { from: <PZ-ID>.<ключ>, index: N, missing: <что рисовать, если элемента нет> }
+viewpoints:
+  - id: VP-GATE-1
+    location: LOC-GATE
+    panorama: pan_gate_n1_day
+    entry_yaw: 0
+    exits:
+      - { to: VP-ALLEY-1, yaw: 0,  pitch: -22, icon: outdoor }
+      - { to: VP-GATE-2,  yaw: 30, pitch: -18, icon: door, gate: GT-P03, on_locked: { open_puzzle: PZ-GATE-01 } }
+    hotspots: [HS-GATE-PILLARS, HS-GATE-LOCK, HS-GATE-ROAD]
+    patches: [ { id: gatehouse_door_open, when: solved.PZ-GATE-01 } ]
+    readability_test: { date: null, missed: [] }
+    overlays:
+      - { id: medallion_1, kind: sign, yaw: -30, pitch: 12, size_deg: 6, sign: { from: PZ-GATE-01.pillars, index: 0, missing: lantern } }
+      - { id: medallion_2, kind: sign, yaw: -10, pitch: 14, size_deg: 6, sign: { from: PZ-GATE-01.pillars, index: 1, missing: lantern } }
+      - { id: medallion_3, kind: sign, yaw: 10,  pitch: 14, size_deg: 6, sign: { from: PZ-GATE-01.pillars, index: 2, missing: lantern } }
+      - { id: medallion_4, kind: sign, yaw: 30,  pitch: 12, size_deg: 6, sign: { from: PZ-GATE-01.pillars, index: 3, missing: lantern } }
+  - id: VP-GATE-2
+    location: LOC-GATE
+    panorama: pan_gate_n2_day
+    entry_yaw: 0
+    first_entry_line: DLG-GATE-004
+    exits: [ { to: VP-GATE-1, yaw: 180, pitch: -18, icon: door } ]
+    hotspots: [HS-GATE-KEYBOX, HS-GATE-WEATHERREC, HS-GATE-WEATHERLOG, HS-GATE-RECORDER, HS-GATE-WALLCLOCK]
+    patches: [ { id: keybox_open_empty_hook, when: solved.PZ-GATE-03 },
+               { id: wallclock, when: difficulty.hard } ]
+  - id: VP-ALLEY-1
+    location: LOC-ALLEY
+    panorama: pan_alley_n1_day
+    entry_yaw: 0
+    first_entry_line: DLG-ALLEY-001
+    exits:
+      - { to: VP-GATE-1, yaw: 180, pitch: -22, icon: outdoor }
+      - { to: VP-PIER-1, yaw: 265, pitch: -14, icon: outdoor, first_use_line: DLG-ALLEY-011 }
+    hotspots: [HS-ALLEY-FOUNTAIN, HS-ALLEY-FRONTDOOR, HS-ALLEY-BARREL, HS-ALLEY-TOWERDOOR,
+               HS-ALLEY-TERRACE, HS-ALLEY-GARDENGATE, HS-ALLEY-GRAVEL]
+    on_enter_once_when: { flag: solved.PZ-PIER-01, line: DLG-ALLEY-010 }
+  - id: VP-PIER-1
+    location: LOC-PIER
+    panorama: pan_pier_n1_day
+    entry_yaw: 0
+    first_entry_line: DLG-PIER-001
+    exits: [ { to: VP-ALLEY-1, yaw: 175, pitch: -18, icon: outdoor } ]
+    hotspots: [HS-PIER-SCENE, HS-PIER-SHED]

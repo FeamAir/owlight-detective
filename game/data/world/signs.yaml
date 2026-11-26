@@ -1,0 +1,11 @@
+# «Знаки мастерской» (библия 9.1). Рисуются движком (векторно), названия локализуются (sign.<id>).
+# Решения никогда не опираются на название знака.
+signs:
+  - { id: owl,      number: 1, color: "#F4F1E8", side: N }
+  - { id: key,      number: 2, color: "#D9B740", side: NE }
+  - { id: gear,     number: 3, color: "#8C8C8C", side: E }
+  - { id: moon,     number: 4, color: "#3F5FA8", side: SE }
+  - { id: feather,  number: 5, color: "#4E8A4A", side: S }
+  - { id: pendulum, number: 6, color: "#A83A32", side: SW }
+  - { id: star,     number: 7, color: "#7A4C9E", side: W }
+  - { id: wave,     number: 8, color: "#6FB2D6", side: NW }

@@ -1,0 +1,43 @@
+clues:                                   # карточки «Улики», текст ≤ 8 слов
+  - { id: CL-GATE-2310, text: card.cl_gate_2310, source: HS-GATE-RECORDER, case_card: K7, evidence_no: 7 }
+  - { id: CL-COAT-DRY,  text: card.cl_coat_dry,  source: PZ-PIER-01,  case_card: K2 }
+  - { id: CL-HAT,       text: card.cl_hat,       source: PZ-PIER-01,  case_card: K3 }
+  - { id: CL-PRINTS,    text: card.cl_prints,    source: PZ-ALLEY-01, case_card: K4 }
+  - { id: CL-RAIN,      text: card.cl_rain,      source: PZ-GATE-02,  case_card: K1,
+      params: { rain_start: "23:15", rain_end: "02:00" } }
+documents:
+  - { id: DOC-LETTER,      line: DLG-INTRO-001, font: tarn,  from: EV-INTRO, title: doc.letter.title }
+  - { id: DOC-TICKET,      text_by_level: doc.ticket, from: PZ-GATE-03, title: doc.ticket.title }
+  - { id: DOC-WEATHER-LOG, text_by_level: doc.weather_log, font: tarn, from: HS-GATE-WEATHERLOG, title: doc.weather_log.title }
+  - { id: DOC-PIER-NOTES,  text_by_level: doc.pier_notes, font: clara, from: PZ-PIER-01, title: doc.pier_notes.title,
+      lines_from_targets: true }
+snapshots:
+  - { id: SNAP-OWL-BASE,     asset: item_owl_base, auto: all, title: snap.owl_base }
+  - { id: SNAP-GATE-TAPE,    asset: doc_gate_tape, auto: all, params: { marks_14: ["17:30", "23:10"] }, title: snap.gate_tape }
+  - { id: SNAP-WEATHER-TAPE, asset: doc_weather_tape, auto: all, params_from: values.PZ-GATE-02, title: snap.weather_tape }
+  - { id: SNAP-PILLARS,      asset: cu_gate_pillars, auto: easy, title: snap.pillars }          # engine: autosnap Л у столбов
+  - { id: SNAP-FOUNTAIN,     asset: cu_alley_fountain, auto: easy, title: snap.fountain }       # engine: autosnap Л у фонтана
+  - { id: SNAP-PIER-SCENE,   asset: cu_pier_scene, auto: all, title: snap.pier_scene }
+codes:                                   # авто только на Л (каркас 3.3), см. 5.1
+  - { id: CODE-PILLARS-ORDER,   from: values.PZ-GATE-01.pillars, kind: signs, title: code.pillars }
+  - { id: CODE-FOUNTAIN-LEVELS, from: values.PZ-GATE-01.levels, kind: sign_levels, title: code.fountain }
+  - { id: CODE-TICKET,          from: values.PZ-GATE-03, kind: ticket, title: code.ticket }
+questions:
+  - { id: Q-OWL,       text: q.owl,       levels: [easy, normal], easy_mark: may_be_useful }
+  - { id: Q-STUDY,     text: q.study,     levels: [easy, normal, hard], kind: locked, closes_on: has.IT-STUDY-KEY }
+  - { id: Q-GATE-2310, text: q.gate_2310, levels: [easy, normal], easy_mark: may_be_useful }
+  - { id: Q-TOWER,     text: q.tower,     levels: [easy, normal, hard], kind: locked }
+  - { id: Q-BARREL,    text: q.barrel,    levels: [easy, normal] }
+  - { id: Q-SHED,      text: q.shed,      levels: [easy, normal, hard], kind: locked }
+goals:
+  - { id: G-01, text: goal.g01, opens_on: line.DLG-INTRO-026, closes_on: vp.VP-GATE-2, main: true }
+  - { id: G-02, text: goal.g02, opens_on: vp.VP-GATE-2,       closes_on: solved.PZ-GATE-03, main: true }
+  - { id: G-03, text: goal.g03, opens_on: solved.PZ-GATE-03,  closes_on: ev.EV-SLICE-END, main: true }
+  - { id: S-01, text: goal.s01, opens_on: line.DLG-INTRO-028, closes_on: solved.PZ-PIER-01 }
+  - { id: S-02, text: goal.s02, opens_on: solved.PZ-PIER-01,  closes_on: solved.PZ-GATE-02 }
+  - { id: S-03, text: goal.s03, opens_on: solved.PZ-PIER-01,  closes_on: solved.PZ-ALLEY-01 }
+people:                                  # engine: карточки «Дело» → люди
+  - { id: TARN,     name_key: speaker.TARN,     facts: [DLG-INTRO-001] }
+  - { id: MARTHA,   name_key: speaker.MARTHA,   facts: [DLG-INTRO-005, DLG-INTRO-007, DLG-INTRO-009, DLG-INTRO-011, DLG-INTRO-016] }
+  - { id: VERONICA, name_key: speaker.VERONICA, facts: [DLG-INTRO-019, DLG-INTRO-021] }
+  - { id: FELIX,    name_key: speaker.FELIX,    facts: [DLG-INTRO-023, DLG-INTRO-024, DLG-INTRO-025, DLG-INTRO-027] }

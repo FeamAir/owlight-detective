@@ -1,0 +1,209 @@
+# Строки интерфейса (не реплики, без аудио). Ключ → { ru, en }. Параметры — {name}.
+# UI-… — ID из slice-01-spec.md 4.6; остальные ключи — служебные строки движка (черновик для дизайнера).
+strings:
+  # --- главное меню / новая игра ---
+  menu.title:            { ru: "Совиный Холм", en: "Owl Hill" }
+  menu.subtitle:         { ru: "Срез 01 · тестовая сборка", en: "Slice 01 · test build" }
+  menu.continue:         { ru: "Продолжить", en: "Continue" }
+  menu.new_game:         { ru: "Новая игра", en: "New game" }
+  menu.settings:         { ru: "Настройки", en: "Settings" }
+  menu.debug:            { ru: "Отладка", en: "Debug" }
+  menu.save_info:        { ru: "{difficulty} · {time} в игре", en: "{difficulty} · {time} played" }
+  diff.title:            { ru: "Выберите сложность", en: "Choose difficulty" }
+  diff.easy:             { ru: "Лёгкий", en: "Easy" }
+  diff.normal:           { ru: "Нормальный", en: "Normal" }
+  diff.hard:             { ru: "Сложный", en: "Hard" }
+  diff.easy.sub:         { ru: "Для истории и спокойной игры", en: "For the story and a relaxed game" }
+  diff.normal.sub:       { ru: "Как задумано", en: "As intended" }
+  diff.hard.sub:         { ru: "Только вы и дом", en: "Just you and the house" }
+  diff.easy.desc:        { ru: "Активные предметы подсвечены, важное записывается само, мысли героини всегда подскажут, куда идти", en: "Active objects glow, key facts are noted for you, and Clara's thoughts always tell you where to go" }
+  diff.normal.desc:      { ru: "Меньше помощи. Застряли — попросите Клару подумать: мысль придёт через несколько минут, а пока можно искать самим", en: "Less help. Stuck? Ask Clara to think: the thought comes in a few minutes, and meanwhile you can keep looking" }
+  diff.hard.desc:        { ru: "Без подсветки и без подсказок. Только вы и улики", en: "No highlights and no hints. Just you and the clues" }
+  diff.common:           { ru: "Решения головоломок игра не подсказывает ни на одном уровне", en: "The game never gives away puzzle solutions, on any level" }
+  diff.locked_note:      { ru: "Сложность нельзя изменить во время игры. Сменить её можно, только начав заново.", en: "Difficulty can't be changed during the game. To change it, start a new game." }
+  diff.start:            { ru: "Начать дело", en: "Take the case" }
+  diff.overwrite:        { ru: "Начать заново? Сохранение будет удалено.", en: "Start over? The saved game will be deleted." }
+  btn.cancel:            { ru: "Отмена", en: "Cancel" }
+  btn.ok:                { ru: "Хорошо", en: "OK" }
+  btn.back:              { ru: "‹ Назад", en: "‹ Back" }
+  btn.close:             { ru: "Закрыть", en: "Close" }
+  btn.restart:           { ru: "Начать заново", en: "Start over" }
+  btn.next:              { ru: "Дальше ›", en: "Next ›" }
+  # --- HUD ---
+  hud.bag:               { ru: "Сумка", en: "Bag" }
+  hud.notebook:          { ru: "Блокнот", en: "Notebook" }
+  hud.thoughts:          { ru: "Мысли", en: "Thoughts" }
+  hud.menu:              { ru: "≡", en: "≡" }
+  hud.added_notebook:    { ru: "Добавлено в блокнот: {what}", en: "Added to notebook: {what}" }
+  hud.added_bag:         { ru: "В сумке: {what}", en: "In the bag: {what}" }
+  hud.locked:            { ru: "Заперто", en: "Locked" }
+  # --- пауза / настройки ---
+  pause.title:           { ru: "Пауза", en: "Paused" }
+  pause.resume:          { ru: "Продолжить", en: "Resume" }
+  pause.settings:        { ru: "Настройки", en: "Settings" }
+  pause.main_menu:       { ru: "В главное меню", en: "Main menu" }
+  pause.saved_ago:       { ru: "Сохранено автоматически", en: "Saved automatically" }
+  settings.title:        { ru: "Настройки", en: "Settings" }
+  settings.language:     { ru: "Язык: Русский", en: "Language: English" }
+  settings.text_speed:   { ru: "Скорость текста: {v}", en: "Text speed: {v}" }
+  settings.speed.instant: { ru: "мгновенно", en: "instant" }
+  settings.speed.fast:   { ru: "быстро", en: "fast" }
+  settings.speed.normal: { ru: "обычно", en: "normal" }
+  # --- отладка (сборка владельца) ---
+  debug.title:           { ru: "Отладка (сборка владельца)", en: "Debug (owner build)" }
+  debug.overlay:         { ru: "Контуры зон и yaw/pitch: {v}", en: "Hotspot outlines and yaw/pitch: {v}" }
+  debug.fast_hints:      { ru: "Ускорить ожидание «Мыслей» (5 мин → {s} с): {v}", en: "Fast «Thoughts» wait (5 min → {s} s): {v}" }
+  debug.on:              { ru: "вкл.", en: "on" }
+  debug.off:             { ru: "выкл.", en: "off" }
+  debug.start_from:      { ru: "Начать с точки (новая игра, уровень {d}):", en: "Start from a point (new game, {d}):" }
+  debug.sp.after_intro:  { ru: "После пролога (у ворот)", en: "After the prologue (gate)" }
+  debug.sp.before_gate03: { ru: "Перед ящиком с ключами (GATE-03)", en: "Before the key box (GATE-03)" }
+  debug.sp.before_pier01: { ru: "Перед мостками (PIER-01)", en: "Before the pier (PIER-01)" }
+  debug.sp.before_alley01: { ru: "Перед гравием (ALLEY-01)", en: "Before the gravel (ALLEY-01)" }
+  debug.sp.before_gate02: { ru: "Перед лентой погоды (GATE-02)", en: "Before the weather tape (GATE-02)" }
+  debug.sp.before_end:   { ru: "Ключ получен (конец среза)", en: "Key obtained (slice end)" }
+  debug.solve:           { ru: "[отладка] Решить", en: "[debug] Solve" }
+  debug.protocol:        { ru: "Протокол прохождения", en: "Play protocol" }
+  # --- обучение (4.6) ---
+  UI-TUT-01:             { ru: "Проведите пальцем, чтобы осмотреться", en: "Swipe to look around" }
+  UI-TUT-02:             { ru: "Коснитесь предмета, чтобы рассмотреть", en: "Tap an object to examine it" }
+  UI-TUT-03:             { ru: "Всё найденное — в блокноте", en: "Everything you find goes into the notebook" }
+  UI-TUT-04:             { ru: "Коснитесь метки, чтобы пройти", en: "Tap a mark to walk there" }
+  UI-TUT-05:             { ru: "Проведите по барабану вверх или вниз", en: "Swipe a drum up or down" }
+  UI-TUT-06:             { ru: "Сумка: коснитесь вещи дважды, чтобы рассмотреть", en: "Bag: tap an item twice to examine it" }
+  UI-TUT-07:             { ru: "Застряли? Спросите Клару", en: "Stuck? Ask Clara" }
+  UI-TUT-08:             { ru: "Мысль придёт через несколько минут. Пока можно искать самим", en: "The thought will come in a few minutes. Keep looking meanwhile" }
+  UI-TUT-09:             { ru: "Выберите два фрагмента и вывод", en: "Pick two fragments and a conclusion" }
+  UI-FB-COUNT:           { ru: "Неверно. Верно {n} из {m}", en: "Not quite. {n} of {m} right" }
+  UI-FB-WRONG:           { ru: "Неверно", en: "Wrong" }
+  UI-BOUNDARY:           { ru: "[срез] закрыто до утверждения", en: "[slice] closed pending approval" }
+  # --- конец среза (2.5) ---
+  UI-END-01:             { ru: "Продолжение следует", en: "To be continued" }
+  UI-END-02:             { ru: "Дом и кабинет Тарна — следующая локация. Она на утверждении.", en: "The house and Tarn's study are the next location, pending approval." }
+  UI-END-03:             { ru: "Время: {time}\nГоловоломки: {puzzles} из 5\nУлики: {clues} из 5\nОшибок: {errors}\nПодсказок взято: {hints}\nСложность: {difficulty}", en: "Time: {time}\nPuzzles: {puzzles} of 5\nClues: {clues} of 5\nMistakes: {errors}\nHints used: {hints}\nDifficulty: {difficulty}" }
+  UI-END-04:             { ru: "Вернуться в срез", en: "Back to the slice" }
+  UI-END-05:             { ru: "Новая игра", en: "New game" }
+  UI-END-06:             { ru: "Главное меню", en: "Main menu" }
+  UI-END-07:             { ru: "Войти в дом", en: "Enter the house" }
+  UI-END-08:             { ru: "Остаться", en: "Stay" }
+  end.unseen:            { ru: "Не осмотрено: {list}", en: "Not yet examined: {list}" }
+  end.zone.LOC-GATE:     { ru: "в сторожке и у ворот", en: "at the gate and gatehouse" }
+  end.zone.LOC-ALLEY:    { ru: "на аллее", en: "on the drive" }
+  end.zone.LOC-PIER:     { ru: "у озера", en: "by the lake" }
+  # --- «Мысли» ---
+  hint.waiting:          { ru: "Мысль созревает, ещё около {min} мин", en: "The thought is forming, about {min} min left" }
+  hint.waiting_lt1:      { ru: "Мысль созревает, меньше минуты", en: "The thought is forming, less than a minute" }
+  hint.cancel:           { ru: "Не нужно, разберусь сама", en: "No need, I'll manage" }
+  hint.think:            { ru: "Подумать", en: "Think" }
+  hint.nothing:          { ru: "Сейчас мне не о чем думать.", en: "Nothing to think about right now." }
+  # --- головоломки ---
+  pz.handle:             { ru: "Повернуть ручку", en: "Turn the handle" }
+  pz.solved:             { ru: "Открыто", en: "Open" }
+  pz.stub.title:         { ru: "Головоломка {id}: экран в разработке", en: "Puzzle {id}: screen in development" }
+  pz.stub.body:          { ru: "Механика описана в docs/levels/slice-01-spec.md (5.x). В этой сборке экран ещё не сделан — можно отметить головоломку решённой кнопкой отладки, чтобы проверить ход среза.", en: "The mechanic is described in docs/levels/slice-01-spec.md (5.x). This build doesn't have the screen yet; use the debug button to mark it solved and test the slice flow." }
+  pz.stub.not_ready:     { ru: "Пока не открыто: не выполнены условия ({req}).", en: "Not available yet: requirements not met ({req})." }
+  pz.reset:              { ru: "Сброс", en: "Reset" }
+  cu.tap_bowl:           { ru: "Коснитесь чаши, чтобы рассмотреть", en: "Tap a bowl to look closer" }
+  cu.fountain.title:     { ru: "Фонтан: чаши", en: "Fountain: bowls" }
+  cu.pillars.title:      { ru: "Столбы ворот, слева направо", en: "Gate pillars, left to right" }
+  cu.plinth_year:        { ru: "На постаменте: {year}", en: "On the plinth: {year}" }
+  # --- блокнот ---
+  nb.tab.case:           { ru: "Дело", en: "Case" }
+  nb.tab.clues:          { ru: "Улики", en: "Clues" }
+  nb.tab.docs:           { ru: "Документы", en: "Documents" }
+  nb.tab.snaps:          { ru: "Снимки", en: "Snapshots" }
+  nb.tab.codes:          { ru: "Коды и числа", en: "Codes & numbers" }
+  nb.tab.questions:      { ru: "Вопросы", en: "Questions" }
+  nb.tab.signs:          { ru: "Знаки", en: "Signs" }
+  nb.tab.thoughts:       { ru: "Мысли", en: "Thoughts" }
+  nb.tab.solved:         { ru: "Решённое", en: "Solved" }
+  nb.tab.log:            { ru: "Журнал реплик", en: "Dialogue log" }
+  nb.goal:               { ru: "Цель", en: "Goal" }
+  nb.side_goals:         { ru: "Побочное", en: "Side" }
+  nb.people:             { ru: "Люди", en: "People" }
+  nb.empty:              { ru: "Пока пусто.", en: "Nothing yet." }
+  nb.may_be_useful:      { ru: "(может пригодиться)", en: "(may be useful)" }
+  nb.investigator:       { ru: "Клара Вест, 34. Следователь страхового общества «Атлас». Тарн просил прислать именно её.", en: "Clara West, 34. Investigator for the Atlas insurance society. Tarn asked for her by name." }
+  # --- сумка ---
+  bag.title:             { ru: "Сумка", en: "Bag" }
+  bag.hint:              { ru: "Коснитесь вещи — выбрать, ещё раз — рассмотреть", en: "Tap an item to select, tap again to examine" }
+  bag.owl_base:          { ru: "Донце совы", en: "Base of the owl" }
+  # --- цели (2.3) ---
+  goal.g01:              { ru: "Осмотреть сторожку", en: "Search the gatehouse" }
+  goal.g02:              { ru: "Найти запасной ключ от кабинета", en: "Find the spare key to the study" }
+  goal.g03:              { ru: "Открыть кабинет Тарна", en: "Open Tarn's study" }
+  goal.s01:              { ru: "Пальто у озера", en: "The coat by the lake" }
+  goal.s02:              { ru: "Пальто сухое. Когда его принесли?", en: "The coat is dry. When was it brought?" }
+  goal.s03:              { ru: "Кто-то принёс пальто к озеру", en: "Someone brought the coat to the lake" }
+  # --- вопросы (7.2) ---
+  q.owl:                 { ru: "Знаки на донце совы. Зачем Тарн просил взять её с собой?", en: "Signs on the base of the owl. Why did Tarn ask me to bring it?" }
+  q.study:               { ru: "Кабинет Тарна заперт", en: "Tarn's study is locked" }
+  q.gate_2310:           { ru: "Кто открывал ворота в 23:10?", en: "Who opened the gate at 23:10?" }
+  q.tower:               { ru: "Башня. Заперто изнутри?", en: "The tower. Bolted from inside?" }
+  q.barrel:              { ru: "Кадка полна. Когда её вылили в последний раз?", en: "The rain barrel is full. When was it last emptied?" }
+  q.shed:                { ru: "Лодочный сарай на замке", en: "The boathouse is padlocked" }
+  # --- улики (тексты карточек — черновик, сценарист) ---
+  card.cl_gate_2310:     { ru: "Ночью ворота открывали в 23:10", en: "The gate was opened at 23:10 at night" }
+  card.cl_coat_dry:      { ru: "Пальто на мостках сухое сверху", en: "The coat on the pier is dry on top" }
+  card.cl_hat:           { ru: "Шляпа на пальто сухая целиком", en: "The hat on the coat is completely dry" }
+  card.cl_prints:        { ru: "Свежие следы к мосткам и обратно", en: "Fresh tracks to the pier and back" }
+  card.cl_rain:          { ru: "Дождь шёл с {rain_start} до {rain_end}", en: "Rain fell from {rain_start} to {rain_end}" }
+  # --- документы ---
+  doc.letter.title:      { ru: "Письмо Тарна", en: "Tarn's letter" }
+  doc.ticket.title:      { ru: "Билет на поезд", en: "Train ticket" }
+  doc.weather_log.title: { ru: "Метеожурнал", en: "Weather log" }
+  doc.pier_notes.title:  { ru: "Записи с мостков", en: "Notes from the pier" }
+  doc.ticket.easy:       { ru: "Железная дорога. Билет пассажирский.\nГород — Совиный Холм.\n15 октября. Утренний.\nОтправление: 07:40.\nВ пути: 2 ч.\nПоезд 17. Вагон 3, место 24.", en: "Railway. Passenger ticket.\nCity — Owl Hill.\n15 October. Morning.\nDeparture: 07:40.\nJourney: 2 h.\nTrain 17. Carriage 3, seat 24." }
+  doc.ticket.normal:     { ru: "Железная дорога. Билет пассажирский.\nГород — Совиный Холм.\n15 октября. Утренний.\nОтправление: 06:55.\nВ пути: 2 ч 45 мин.\nПоезд 17. Вагон 3, место 24.", en: "Railway. Passenger ticket.\nCity — Owl Hill.\n15 October. Morning.\nDeparture: 06:55.\nJourney: 2 h 45 min.\nTrain 17. Carriage 3, seat 24." }
+  doc.ticket.hard:       { ru: "Железная дорога. Билет пассажирский.\n15 октября. Утренний.\nОтправление: 06:52.\nГород — Узловая: 1 ч 20 мин.\nСтоянка на Узловой: 6 мин.\nУзловая — Совиный Холм: 1 ч 22 мин.\nБилет № 0915. Вагон 3, место 24.", en: "Railway. Passenger ticket.\n15 October. Morning.\nDeparture: 06:52.\nCity — Junction: 1 h 20 min.\nStop at Junction: 6 min.\nJunction — Owl Hill: 1 h 22 min.\nTicket No. 0915. Carriage 3, seat 24." }
+  doc.weather_log.easy:  { ru: "Метеожурнал. Переписано с ленты.\n12 окт.  Дождь с 14:00 до 16:30, небольшой. Ветер с озера.\n13 окт.  Сухо. Ветер с дороги. Туман до полудня.\n14 окт.  Сухо. Ветер с озера, к вечеру крепче.", en: "Weather log. Copied from the tape.\n12 Oct.  Rain 14:00 to 16:30, light. Wind off the lake.\n13 Oct.  Dry. Wind from the road. Fog till noon.\n14 Oct.  Dry. Wind off the lake, stronger by evening." }
+  doc.weather_log.normal: { ru: "Метеожурнал. Переписано с ленты.\n12 окт.  Дождь с 14:00 до 16:30, небольшой. Ветер с озера.\n13 окт.  Сухо. Ветер с дороги. Туман до полудня.\n14 окт.  Сухо. Ветер с озера, к вечеру крепче.", en: "Weather log. Copied from the tape.\n12 Oct.  Rain 14:00 to 16:30, light. Wind off the lake.\n13 Oct.  Dry. Wind from the road. Fog till noon.\n14 Oct.  Dry. Wind off the lake, stronger by evening." }
+  doc.weather_log.hard:  { ru: "Метеожурнал. Переписано с ленты.\n10 окт.  Дождь с 06:00 до 09:00. [черновик]\n11 окт.  Сухо. [черновик]\n12 окт.  Дождь с 14:00 до 16:30, небольшой. Ветер с озера.\n13 окт.  Сухо. Ветер с дороги. Туман до полудня.\n14 окт.  Сухо. Ветер с озера, к вечеру крепче. К ночи, похоже, польёт.", en: "Weather log. Copied from the tape.\n10 Oct.  Rain 06:00 to 09:00. [draft]\n11 Oct.  Dry. [draft]\n12 Oct.  Rain 14:00 to 16:30, light. Wind off the lake.\n13 Oct.  Dry. Wind from the road. Fog till noon.\n14 Oct.  Dry. Wind off the lake, stronger by evening. Looks like rain by night." }
+  doc.pier_notes.easy:   { ru: "1. Пальто сложено у последней сваи.\n2. Шляпа лежит на пальто — сухая целиком.\n3. Верх пальто сухой, ворс торчит.\n4. По нижнему краю пальто — подмокшая полоса.\n5. В выемке доски — лужица.", en: "1. Coat folded by the last post.\n2. Hat on the coat — completely dry.\n3. Top of the coat dry, nap standing up.\n4. A damp band along the bottom edge.\n5. A puddle in a dip in the boards." }
+  doc.pier_notes.normal: { ru: "1. Пальто сложено у последней сваи.\n2. Шляпа лежит на пальто — сухая целиком.\n3. Верх пальто сухой, ворс торчит.\n4. По нижнему краю пальто — подмокшая полоса.\n5. В выемке доски — лужица.\n6. Листья по всему настилу мокрые.\n7. Ведро под жёлобом сарая — полное до края.", en: "1. Coat folded by the last post.\n2. Hat on the coat — completely dry.\n3. Top of the coat dry, nap standing up.\n4. A damp band along the bottom edge.\n5. A puddle in a dip in the boards.\n6. Wet leaves all over the decking.\n7. Bucket under the boathouse gutter — full to the brim." }
+  doc.pier_notes.hard:   { ru: "1. Пальто сложено у последней сваи.\n2. Шляпа лежит на пальто — сухая целиком.\n3. Верх пальто сухой, ворс торчит.\n4. По нижнему краю пальто — подмокшая полоса.\n5. В выемке доски — лужица.\n6. Листья по всему настилу мокрые.\n7. Ведро под жёлобом сарая — полное до края.", en: "1. Coat folded by the last post.\n2. Hat on the coat — completely dry.\n3. Top of the coat dry, nap standing up.\n4. A damp band along the bottom edge.\n5. A puddle in a dip in the boards.\n6. Wet leaves all over the decking.\n7. Bucket under the boathouse gutter — full to the brim." }
+  # --- снимки и коды ---
+  snap.owl_base:         { ru: "Донце совы", en: "Base of the owl" }
+  snap.gate_tape:        { ru: "Лента самописца ворот: 14 окт. — 17:30, 23:10", en: "Gate recorder tape: 14 Oct — 17:30, 23:10" }
+  snap.weather_tape:     { ru: "Лента погодного самописца", en: "Weather recorder tape" }
+  snap.pillars:          { ru: "Столбы ворот", en: "Gate pillars" }
+  snap.fountain:         { ru: "Чаши фонтана", en: "Fountain bowls" }
+  snap.pier_scene:       { ru: "Мостки: пальто и шляпа", en: "The pier: coat and hat" }
+  code.pillars:          { ru: "Столбы слева направо", en: "Pillars, left to right" }
+  code.fountain:         { ru: "Вода в чашах", en: "Water in the bowls" }
+  code.ticket:           { ru: "Билет", en: "Ticket" }
+  code.ticket.fmt:       { ru: "отправление {departure}, в пути {duration}", en: "departure {departure}, journey {duration}" }
+  # --- предметы ---
+  item.owl:              { ru: "Заводная сова", en: "Clockwork owl" }
+  item.owl.desc:         { ru: "Сова с ярмарки. На донце — четыре знака.", en: "The owl from the fair. Four signs on its base." }
+  item.ticket:           { ru: "Билет и письмо Тарна", en: "Tarn's ticket and letter" }
+  item.ticket.desc:      { ru: "Билет на утренний поезд.", en: "A ticket for the morning train." }
+  item.glasses:          { ru: "Очки для чтения", en: "Reading glasses" }
+  item.glasses.desc:     { ru: "Очки на цепочке. Почти лупа.", en: "Glasses on a chain. Almost a magnifier." }
+  item.study_key:        { ru: "Ключ «Кабинет»", en: "Key: 'Study'" }
+  item.study_key.desc:   { ru: "Запасной ключ с биркой «Кабинет».", en: "A spare key tagged 'Study'." }
+  # --- знаки ---
+  sign.owl:              { ru: "Сова", en: "Owl" }
+  sign.key:              { ru: "Ключ", en: "Key" }
+  sign.gear:             { ru: "Шестерня", en: "Gear" }
+  sign.moon:             { ru: "Луна", en: "Moon" }
+  sign.feather:          { ru: "Перо", en: "Feather" }
+  sign.pendulum:         { ru: "Маятник", en: "Pendulum" }
+  sign.star:             { ru: "Звезда", en: "Star" }
+  sign.wave:             { ru: "Волна", en: "Wave" }
+  sign.lantern:          { ru: "Фонарь", en: "Lantern" }
+  # --- места и люди ---
+  loc.gate:              { ru: "Ворота и сторожка", en: "Gate and gatehouse" }
+  loc.alley:             { ru: "Аллея и фонтан", en: "Drive and fountain" }
+  loc.pier:              { ru: "Мостки", en: "The pier" }
+  vp.VP-GATE-1:          { ru: "У ворот", en: "At the gate" }
+  vp.VP-GATE-2:          { ru: "Сторожка", en: "Gatehouse" }
+  vp.VP-ALLEY-1:         { ru: "Фонтан", en: "Fountain" }
+  vp.VP-PIER-1:          { ru: "Мостки", en: "Pier" }
+  speaker.CLARA:         { ru: "Клара", en: "Clara" }
+  speaker.CLARA.thought: { ru: "Клара (мысли)", en: "Clara (thinking)" }
+  speaker.MARTHA:        { ru: "Марта", en: "Martha" }
+  speaker.VERONICA:      { ru: "Вероника", en: "Veronica" }
+  speaker.FELIX:         { ru: "Феликс", en: "Felix" }
+  speaker.TARN:          { ru: "Тарн", en: "Tarn" }
+  slice.01.title:        { ru: "Ворота, сторожка, аллея и мостки", en: "Gate, gatehouse, drive and pier" }

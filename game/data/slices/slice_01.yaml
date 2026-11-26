@@ -1,0 +1,30 @@
+slice:
+  id: SLICE-01
+  title_key: slice.01.title
+  start: { event: EV-INTRO, then: { vp: VP-GATE-1, yaw: 0 }, autosave: true }
+  locations: [LOC-GATE, LOC-ALLEY, LOC-PIER]
+  boundary_exits:                       # в полной игре этих блокировок нет
+    - { hotspot: HS-ALLEY-FRONTDOOR,  full_game_gate: GT-P04, line: DLG-ALLEY-005, end_trigger: EV-SLICE-END }
+    - { hotspot: HS-ALLEY-GARDENGATE, full_game_gate: GT-P08, line: DLG-ALLEY-008 }
+  end:
+    event: EV-SLICE-END
+    requires: { items: [IT-STUDY-KEY] }
+    trigger: { tap: HS-ALLEY-FRONTDOOR }
+    confirm_if_unsolved: { puzzles: [PZ-PIER-01, PZ-ALLEY-01, PZ-GATE-02], line: DLG-ALLEY-007,
+                           list_unsolved: { easy: true, normal: true, hard: false } }
+    line_on_enter: DLG-ALLEY-006
+    screen: UI-SLICE-END
+    stats: [time, puzzles_solved, clues_found, errors, hints_used, difficulty]
+    clues_counted: [CL-GATE-2310, CL-COAT-DRY, CL-HAT, CL-PRINTS, CL-RAIN]   # engine: для статистики «улики N из 5»
+  debug:                                # только сборка для владельца
+    label_boundary: true
+    export_protocol: true               # время, попытки, подсказки по каждой PZ
+    values_profile: test
+    # engine: точки «начать с точки» (меню отладки)
+    start_points:
+      - { id: after_intro,   vp: VP-GATE-1, label_key: debug.sp.after_intro }
+      - { id: before_gate03, vp: VP-GATE-2, label_key: debug.sp.before_gate03, solved: [PZ-GATE-01] }
+      - { id: before_pier01, vp: VP-PIER-1, label_key: debug.sp.before_pier01 }
+      - { id: before_alley01, vp: VP-ALLEY-1, label_key: debug.sp.before_alley01, solved: [PZ-PIER-01] }
+      - { id: before_gate02, vp: VP-GATE-2, label_key: debug.sp.before_gate02, solved: [PZ-GATE-01, PZ-PIER-01] }
+      - { id: before_end,    vp: VP-ALLEY-1, label_key: debug.sp.before_end, solved: [PZ-GATE-01, PZ-GATE-03] }

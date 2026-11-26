@@ -1,0 +1,27 @@
+# Build outputs (APK/AAB) - never commit
+/builds/
+*.apk
+*.aab
+*.idsig
+
+# Signing material - never commit
+*.keystore
+*.jks
+keystore.properties
+.env
+
+# Godot
+.godot/
+game/android/
+*.import.tmp
+export_credentials.cfg
+
+# Generated from game/data/*.yaml by game/tools/data_build.py
+game/content/
+
+# Generated placeholder art (game/tools/gen_placeholders.py)
+game/assets/placeholder/
+
+# Python
+__pycache__/
+*.pyc

@@ -1,0 +1,29 @@
+events:
+  - id: EV-INTRO
+    kind: cutscene
+    frames:
+      - { id: F1, art: intro_f1_office,  lines: [DLG-INTRO-001, DLG-INTRO-002], mode: [read_doc, frame] }
+      - { id: F2, art: intro_f2_owlbase, lines: [], give: [IT-OWL], autosnap: SNAP-OWL-BASE }
+      - { id: F3, art: intro_f3_station, lines: [DLG-INTRO-003, DLG-INTRO-004, DLG-INTRO-005, DLG-INTRO-006,
+                                                  DLG-INTRO-007, DLG-INTRO-008, DLG-INTRO-009] }
+      - { id: F4, art: intro_f4_car,     lines: [DLG-INTRO-010, DLG-INTRO-011, DLG-INTRO-012, DLG-INTRO-013,
+                                                  DLG-INTRO-014, DLG-INTRO-015, DLG-INTRO-016,
+                                                  DLG-INTRO-028, DLG-INTRO-029] }   # 028–029: текст нужен
+      - { id: F5, art: intro_f5_lakeroad, lines: [DLG-INTRO-017, DLG-INTRO-018] }
+      - { id: F6, art: intro_f6_gate,    lines: [] }
+    give_at_start: [IT-TICKET, IT-GLASSES]
+    skippable: false                     # пролог читается; «Пропустить» — только у роликов
+    next: EV-GATE-DIALOG
+  - id: EV-GATE-DIALOG
+    kind: dialog
+    background: { vp: VP-GATE-1, blur: true }
+    participants: [VERONICA, FELIX, CLARA]
+    lines: [DLG-INTRO-019, DLG-INTRO-020, DLG-INTRO-021, DLG-INTRO-022, DLG-INTRO-023,
+            DLG-INTRO-024, DLG-INTRO-025, DLG-INTRO-027, DLG-INTRO-026]
+    on_end: { goal: G-01, question: Q-STUDY, people: [TARN, MARTHA, VERONICA, FELIX], next: EV-TUTORIAL }
+  - id: EV-TUTORIAL
+    kind: tutorial
+    steps: [UI-TUT-01, UI-TUT-02, UI-TUT-03, UI-TUT-04]
+    then_once: { ui: UI-TUT-07, levels: [easy, normal], normal_extra: UI-TUT-08 }
+  - id: EV-SLICE-END
+    kind: slice_end

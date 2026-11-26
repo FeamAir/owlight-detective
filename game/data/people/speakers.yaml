@@ -1,0 +1,8 @@
+# Говорящие: имя (ключ строки), сторона портрета в диалоге, эмоции (дизайн 4.1).
+# Портрет: assets/portraits/<portrait>_<emotion>.png (настоящий) или заглушка assets/placeholder/portraits/…
+speakers:
+  - { id: CLARA,    name_key: speaker.CLARA,    side: right, portrait: clara,    emotions: [calm, thoughtful, surprised], default_emotion: calm }
+  - { id: MARTHA,   name_key: speaker.MARTHA,   side: left,  portrait: martha,   emotions: [neutral, guarded, surprised, upset], default_emotion: neutral }
+  - { id: VERONICA, name_key: speaker.VERONICA, side: left,  portrait: veronica, emotions: [neutral, guarded, surprised, upset], default_emotion: neutral }
+  - { id: FELIX,    name_key: speaker.FELIX,    side: left,  portrait: felix,    emotions: [smile, guarded, surprised, upset], default_emotion: smile }
+  - { id: TARN,     name_key: speaker.TARN,     side: none,  portrait: null,     emotions: [], default_emotion: null }

@@ -1,0 +1,4 @@
+locations:
+  - { id: LOC-GATE,  name_key: loc.gate,  map: { page: grounds, node: gate },  lighting: [day] }
+  - { id: LOC-ALLEY, name_key: loc.alley, map: { page: grounds, node: alley }, lighting: [day] }
+  - { id: LOC-PIER,  name_key: loc.pier,  map: { page: grounds, node: pier },  lighting: [day] }

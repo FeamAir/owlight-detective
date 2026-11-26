@@ -1,0 +1,97 @@
+# Узлы-головоломки и связи (каркас 7.6). Порядок узлов = порядок приоритета «обязательных» для «Мыслей».
+# engine: screen — какой экран головоломки открывает движок:
+#   code_lock — кодовый замок T01 (сделан); stub — заглушка «в разработке» с кнопкой отладки «Решить».
+# engine: on_solved_snap — снимок, который кладётся в блокнот при решении.
+nodes:
+  - id: PZ-GATE-01
+    kind: puzzle
+    type: T01
+    screen: code_lock
+    act: 1
+    location: LOC-GATE
+    hotspot: HS-GATE-LOCK
+    rating: 1
+    mandatory: true
+    loc_class: A
+    requires: { knows: [seen.pillars, seen.fountain_levels, seen.lock_engraving] }
+    unlocks: [GT-P03]
+    logic_line: LOGIC-GATE-01
+    feedback: { easy: [FB-GATE01-E1, FB-GATE01-E2, FB-GATE01-E3, FB-GATE01-E4],
+                normal: [FB-GATE01-N1, FB-GATE01-N2, FB-GATE01-N3], hard: wrong_only }
+    # engine: какая реакция на какую ошибку (проверяются сверху вниз; на С всегда UI-FB-WRONG).
+    #   owl_base_order   — набраны уровни воды знаков с донца совы (5.1 п.3)
+    #   sign_numbers     — набраны номера знаков (таблица знаков) в порядке столбов
+    #   digit_not_in_bowls — есть цифра, которой нет ни в одной чаше
+    #   right_digits_wrong_order — цифры верные, порядок нет
+    #   other            — всё остальное
+    feedback_rules:
+      - { when: owl_base_order,           easy: FB-GATE01-E4, normal: FB-GATE01-N1 }
+      - { when: sign_numbers,             easy: FB-GATE01-E2, normal: FB-GATE01-N2 }
+      - { when: digit_not_in_bowls,       easy: FB-GATE01-E3, normal: FB-GATE01-N3 }
+      - { when: right_digits_wrong_order, easy: FB-GATE01-E1, normal: FB-GATE01-N1 }
+      - { when: other,                    easy: FB-GATE01-E1, normal: FB-GATE01-N3 }
+    nav: { area: [HINT-EX-01, HINT-NAV-GATE01-A2], precise: [HINT-NAV-GATE01-P1, HINT-NAV-GATE01-P2],
+           ready: HINT-NAV-GATE01-R, missing: HINT-NAV-GATE01-M }
+  - id: PZ-GATE-03
+    kind: puzzle
+    type: T19
+    screen: stub
+    location: LOC-GATE
+    rating: 2
+    mandatory: true
+    hotspot: HS-GATE-KEYBOX
+    requires: { all_of: [GT-P03], items: [IT-TICKET] }
+    unlocks: [IT-STUDY-KEY]
+    on_solved_line: DLG-GATE-009
+    logic_line: LOGIC-GATE-03
+    nav: { area: [HINT-EX-02, HINT-NAV-GATE03-A2], precise: [HINT-NAV-GATE03-P1, HINT-NAV-GATE03-P2],
+           ready: HINT-NAV-GATE03-R, missing: HINT-NAV-GATE03-M }
+  - id: PZ-PIER-01
+    kind: puzzle
+    type: T08
+    screen: stub
+    location: LOC-PIER
+    rating: 1
+    mandatory: true
+    hotspot: HS-PIER-SCENE
+    requires: {}
+    unlocks: [CL-COAT-DRY, CL-HAT, DOC-PIER-NOTES]
+    activates: [HS-ALLEY-GRAVEL, HS-GATE-WEATHERREC]
+    on_solved_snap: SNAP-PIER-SCENE
+    logic_line: LOGIC-PIER-01
+    nav: { area: [HINT-NAV-PIER01-A1, HINT-NAV-PIER01-A2], precise: [HINT-NAV-PIER01-P1, HINT-NAV-PIER01-P2],
+           ready: HINT-NAV-PIER01-R }
+  - id: PZ-ALLEY-01
+    kind: puzzle
+    type: T16
+    screen: stub
+    location: LOC-ALLEY
+    rating: 2
+    mandatory: true
+    hotspot: HS-ALLEY-GRAVEL
+    requires: { all_of: [PZ-PIER-01] }
+    unlocks: [CL-PRINTS]
+    logic_line: LOGIC-ALLEY-01
+    nav: { area: [HINT-NAV-ALLEY01-A1, HINT-NAV-ALLEY01-A2], precise: [HINT-NAV-ALLEY01-P1, HINT-NAV-ALLEY01-P2],
+           ready: HINT-NAV-ALLEY01-R, missing: HINT-NAV-ALLEY01-M }
+  - id: PZ-GATE-02
+    kind: puzzle
+    type: T15
+    screen: stub
+    location: LOC-GATE
+    rating: 1
+    mandatory: any_of:F-I-3
+    hotspot: HS-GATE-WEATHERREC
+    requires: { all_of: [GT-P03, PZ-PIER-01], docs: [SNAP-WEATHER-TAPE, DOC-PIER-NOTES] }
+    unlocks: [CL-RAIN]
+    logic_line: LOGIC-GATE-02
+    nav: { area: [HINT-NAV-GATE02-A1, HINT-NAV-GATE02-A2], precise: [HINT-NAV-GATE02-P1, HINT-NAV-GATE02-P2],
+           ready: HINT-NAV-GATE02-R, missing: HINT-NAV-GATE02-M }
+  - id: SLICE-END
+    kind: goal
+    location: LOC-ALLEY
+    requires: { items: [IT-STUDY-KEY] }
+    hotspot: HS-ALLEY-FRONTDOOR
+    nav: { area: [HINT-NAV-END-A1], precise: [HINT-NAV-END-P1] }
+    priority: after_mandatory
+checks: { no_dead_ends: true, fronts: { min: 1, max: 3 }, long_link_sources_never_closed: true }
