@@ -6,49 +6,154 @@
 <style>
   body { background:#14191e; color:#EEE4CF; font-family: "PT Sans", Arial, sans-serif; margin:24px; }
   h2 { font-weight:600; margin:28px 0 8px; }
-  p { max-width:820px; color:#c9c0ad; }
+  p, li { max-width:820px; color:#c9c0ad; }
   svg { display:block; width:100%; max-width:960px; border:1px solid #3a4651; }
   .scene { fill:#1E2A33; }
+  .blur { fill:#141d24; }
   .btn { fill:#24313F; stroke:#C08F45; stroke-width:2; }
   .btnx { fill:none; stroke:#C08F45; stroke-width:2; stroke-dasharray:5 4; }
   .zone { fill:none; stroke:#93A6AB; stroke-width:1; stroke-dasharray:3 3; }
   .lbl { fill:#EEE4CF; font-size:11px; }
+  .it { fill:#EEE4CF; font-size:11px; font-style:italic; }
   .sm { fill:#93A6AB; font-size:9px; }
   .mark { fill:none; stroke:#EEE4CF; stroke-width:2; }
   .paper { fill:#EEE4CF; }
   .ink { fill:#24313F; font-size:11px; }
+  .inki { fill:#24313F; font-size:11px; font-style:italic; }
+  .track { fill:none; stroke:#93A6AB; stroke-width:1.5; stroke-dasharray:2 3; }
+  .ring { fill:none; stroke:#EEE4CF; stroke-width:3; stroke-linecap:round; }
+  .portrait { fill:#3A2A20; stroke:#C08F45; stroke-width:1.5; }
+  .sleeve { fill:#A8823A; stroke:#24313F; stroke-width:1.5; }
+  .reserved { fill:none; stroke:#93A6AB; stroke-width:1; stroke-dasharray:2 2; }
 </style>
 </head>
 <body>
-<p>Схемы раскладки, не графика. Единица — dp, экран телефона 20:9 в ландшафте (800×360). Пунктир серо-голубой — безопасный отступ 16 dp. Все кнопки не меньше 48 dp.</p>
+<p>Схемы раскладки, не графика. Единица — dp, экран телефона 20:9 в ландшафте (800×360). Пунктир серо-голубой — безопасный отступ 16 dp или зарезервированное место. Все кнопки не меньше 48 dp. Источник: <code>docs/design/visual-and-ux.md</code> (v2: Клара Вест, только субтитры, «Мысли» по запросу с ожиданием).</p>
 
-<h2>1. Игровой экран (панорама)</h2>
+<!-- Повторно используемый значок «Мысли»: профиль в берете + многоточие -->
+<svg width="0" height="0" style="position:absolute;border:0">
+  <defs>
+    <g id="thoughtIcon">
+      <!-- профиль одной линией: берет, лоб, нос, подбородок -->
+      <path d="M-10 -6 q4 -9 14 -7 q6 1 7 5 l-21 2 z" fill="#2f4a3a" stroke="#EEE4CF" stroke-width="1"/>
+      <path d="M-6 -4 q-2 8 2 10 l1 3 l-3 1 l3 2 q1 4 -3 6" fill="none" stroke="#EEE4CF" stroke-width="1.5"/>
+      <path d="M4 -4 q4 6 2 14" fill="none" stroke="#EEE4CF" stroke-width="1.5"/>
+      <circle cx="-4" cy="-17" r="1.3" fill="#EEE4CF"/><circle cx="1" cy="-18" r="1.3" fill="#EEE4CF"/><circle cx="6" cy="-17" r="1.3" fill="#EEE4CF"/>
+    </g>
+  </defs>
+</svg>
+
+<h2>1. Игровой экран (панорама), нормальный уровень</h2>
 <svg viewBox="0 0 800 360">
   <rect class="scene" x="0" y="0" width="800" height="360"/>
   <rect class="zone" x="16" y="16" width="768" height="328"/>
   <!-- marks -->
-  <ellipse class="mark" cx="300" cy="270" rx="34" ry="10"/><path class="mark" d="M292 268 l8 -6 l8 6"/>
-  <text class="sm" x="262" y="296">метка перехода (48 dp зона)</text>
-  <rect class="mark" x="520" y="120" width="40" height="70"/><ellipse class="mark" cx="540" cy="200" rx="26" ry="7"/>
-  <text class="sm" x="500" y="222">дверь: метка + арка</text>
-  <circle cx="420" cy="160" r="22" fill="none" stroke="#F2C98A" stroke-width="2" stroke-dasharray="2 3"/>
-  <text class="sm" x="380" y="196">объект (Л: мерцание)</text>
+  <ellipse class="mark" cx="300" cy="250" rx="34" ry="10"/><path class="mark" d="M292 248 l8 -6 l8 6"/>
+  <text class="sm" x="262" y="276">метка перехода (48 dp зона)</text>
+  <rect class="mark" x="520" y="110" width="40" height="70"/><ellipse class="mark" cx="540" cy="190" rx="26" ry="7"/>
+  <text class="sm" x="500" y="212">дверь: метка + арка</text>
+  <circle cx="420" cy="150" r="22" fill="none" stroke="#F2C98A" stroke-width="2" stroke-dasharray="2 3"/>
+  <text class="sm" x="380" y="186">объект</text>
   <!-- HUD -->
-  <rect class="btn" x="16" y="16" width="48" height="48" rx="6"/><text class="lbl" x="33" y="45">≡</text>
+  <rect class="btn" x="16" y="16" width="48" height="48" rx="6"/><text class="lbl" x="34" y="45">≡</text>
   <text class="sm" x="70" y="34">Меню (редко)</text>
-  <rect class="btn" x="728" y="16" width="56" height="56" rx="28"/><text class="lbl" x="738" y="48">Мысль</text>
-  <circle cx="744" cy="80" r="3" fill="#EEE4CF"/><circle cx="756" cy="80" r="3" fill="#EEE4CF"/><circle cx="768" cy="80" r="3" fill="none" stroke="#EEE4CF"/>
-  <text class="sm" x="640" y="34">Л: всегда, Н: заряды, С: нет</text>
-  <rect class="btnx" x="16" y="156" width="48" height="48" rx="6"/><text class="lbl" x="22" y="185">Лупа</text>
-  <text class="sm" x="70" y="184">только Н</text>
-  <rect x="220" y="262" width="360" height="40" rx="4" fill="#1E2A33" fill-opacity=".85" stroke="#3a4651"/>
-  <text class="lbl" x="232" y="287">Субтитр: «Часы стоят. Странно, их всегда заводили».</text>
+  <!-- Мысли: идёт ожидание, кольцо ~60 % -->
+  <circle class="track" cx="756" cy="44" r="27"/>
+  <circle class="ring" cx="756" cy="44" r="27" stroke-dasharray="102 170" transform="rotate(-90 756 44)"/>
+  <circle class="btn" cx="756" cy="44" r="22"/>
+  <use href="#thoughtIcon" x="756" y="48"/>
+  <text class="sm" x="600" y="30">«Мысли»: Л — всегда сразу;</text>
+  <text class="sm" x="600" y="42">Н — кольцо ожидания (без цифр);</text>
+  <text class="sm" x="600" y="54">С — кнопки нет, угол пуст</text>
+  <!-- Осмотреться -->
+  <rect class="btnx" x="16" y="156" width="48" height="48" rx="6"/>
+  <circle cx="36" cy="176" r="8" fill="none" stroke="#EEE4CF" stroke-width="1.5"/><path d="M42 182 l8 8" stroke="#EEE4CF" stroke-width="2"/>
+  <text class="sm" x="70" y="176">«Осмотреться» — только Н,</text>
+  <text class="sm" x="70" y="188">перезарядка: кольцо ВНУТРИ, квадрат</text>
+  <!-- subtitle: мысль Клары курсивом со значком -->
+  <rect x="200" y="290" width="400" height="40" rx="4" fill="#1E2A33" fill-opacity=".85" stroke="#3a4651"/>
+  <use href="#thoughtIcon" x="220" y="314" transform="scale(1)"/>
+  <text class="it" x="240" y="314">Часы стоят. Странно, их всегда заводили.</text>
+  <text class="sm" x="200" y="284">субтитр: мысль — курсив + значок; реплика вслух — прямой + имя</text>
   <rect class="btn" x="660" y="288" width="56" height="56" rx="6"/><text class="lbl" x="667" y="320">Сумка</text>
   <rect class="btn" x="728" y="288" width="56" height="56" rx="6"/><text class="lbl" x="730" y="320">Блокнот</text>
-  <text class="sm" x="600" y="280">частые действия — под правым пальцем</text>
+  <!-- рукав при действии -->
+  <path class="sleeve" d="M470 360 l14 -46 q16 -10 34 -2 l10 48 z"/>
+  <ellipse cx="503" cy="312" rx="13" ry="8" fill="#e8c9a8" stroke="#24313F"/>
+  <text class="sm" x="536" y="356">рука в горчичном рукаве — 0,3–0,6 с при действии</text>
 </svg>
 
-<h2>2. Сумка открыта (панорама остаётся активной)</h2>
+<h2>2. Кнопка «Мысли»: состояния (нормальный уровень)</h2>
+<p>Каждое состояние отличается формой, а не цветом; проверяется в градациях серого. Цифр на основном экране нет.</p>
+<svg viewBox="0 0 800 200">
+  <rect class="scene" x="0" y="0" width="800" height="200"/>
+  <!-- доступна -->
+  <circle class="track" cx="100" cy="80" r="27"/>
+  <circle class="btn" cx="100" cy="80" r="22"/><use href="#thoughtIcon" x="100" y="84"/>
+  <text class="lbl" x="62" y="134">Доступна</text>
+  <text class="sm" x="40" y="150">пустая пунктирная дорожка</text>
+  <text class="sm" x="40" y="162">тап: HINT-WAIT-0x + старт</text>
+  <!-- ожидание 25 % -->
+  <circle class="track" cx="300" cy="80" r="27"/>
+  <circle class="ring" cx="300" cy="80" r="27" stroke-dasharray="42 170" transform="rotate(-90 300 80)"/>
+  <circle class="btn" cx="300" cy="80" r="22"/><use href="#thoughtIcon" x="300" y="84"/>
+  <text class="lbl" x="255" y="134">Идёт ожидание</text>
+  <text class="sm" x="230" y="150">чернильное кольцо по часовой от 12</text>
+  <text class="sm" x="230" y="162">тап: плашка ожидания (экран 3)</text>
+  <!-- готова -->
+  <circle class="ring" cx="500" cy="80" r="27"/>
+  <circle class="btn" cx="500" cy="80" r="22"/><use href="#thoughtIcon" x="500" y="84"/>
+  <path d="M511 72 q4 6 0 9 q-4 -3 0 -9 z" fill="#EEE4CF" stroke="#24313F" stroke-width=".8"/>
+  <text class="lbl" x="458" y="134">Мысль готова</text>
+  <text class="sm" x="430" y="150">кольцо замкнуто + капля у виска</text>
+  <text class="sm" x="430" y="162">1× вибрация 10 мс, звук пера; само не всплывает</text>
+  <!-- нет кнопки -->
+  <rect class="zone" x="672" y="52" width="56" height="56"/>
+  <text class="lbl" x="660" y="134">Сложный</text>
+  <text class="sm" x="640" y="150">кнопки нет, место пустое</text>
+</svg>
+
+<h2>3. Плашки «Мысли»: ожидание и готовая мысль (поверх панорамы)</h2>
+<svg viewBox="0 0 800 360">
+  <rect class="scene" x="0" y="0" width="800" height="360"/>
+  <!-- кнопка с кольцом -->
+  <circle class="track" cx="756" cy="44" r="27"/>
+  <circle class="ring" cx="756" cy="44" r="27" stroke-dasharray="102 170" transform="rotate(-90 756 44)"/>
+  <circle class="btn" cx="756" cy="44" r="22"/><use href="#thoughtIcon" x="756" y="48"/>
+  <!-- плашка ожидания -->
+  <path d="M736 76 l10 -8 l10 8" class="paper"/>
+  <rect class="paper" x="504" y="76" width="280" height="120" rx="4"/>
+  <text class="inki" x="518" y="100">Я ещё думаю. Пока посмотрю вокруг.</text>
+  <text class="ink" x="518" y="122">Мысль созревает, ещё около 3 мин</text>
+  <rect x="512" y="140" width="170" height="48" rx="4" fill="none" stroke="#24313F" stroke-dasharray="3 2"/>
+  <text class="ink" x="520" y="168" text-decoration="underline">Не нужно, разберусь сама</text>
+  <rect x="690" y="140" width="86" height="48" rx="4" fill="#24313F"/>
+  <text class="lbl" x="712" y="168">Хорошо</text>
+  <text class="sm" x="504" y="212">Плашка ожидания: время только здесь, отмена без штрафа;</text>
+  <text class="sm" x="504" y="224">повторный тап по кнопке таймер не перезапускает.</text>
+
+  <!-- плашка готовой мысли (второе состояние, слева для сравнения) -->
+  <rect class="paper" x="24" y="60" width="320" height="140" rx="4"/>
+  <text class="inki" x="38" y="86">Вот. Кажется, я поняла, куда дальше.</text>
+  <rect x="32" y="140" width="170" height="48" rx="4" fill="none" stroke="#24313F" stroke-dasharray="3 2"/>
+  <text class="ink" x="40" y="168" text-decoration="underline">Не нужно, разберусь сама</text>
+  <rect x="226" y="140" width="110" height="48" rx="4" fill="#24313F"/>
+  <text class="lbl" x="252" y="168">Подумать</text>
+  <text class="sm" x="24" y="216">Готовая мысль (в игре — под кнопкой, справа). Тап мимо / «Назад» —</text>
+  <text class="sm" x="24" y="228">отложить, капля остаётся. «Подумать» — текст выбирается сейчас.</text>
+  <!-- результат -->
+  <rect class="paper" x="24" y="250" width="360" height="86" rx="4"/>
+  <use href="#thoughtIcon" x="44" y="278"/>
+  <g transform="translate(0,0)">
+    <text class="inki" x="62" y="276">Кабинет заперт. А запасные ключи обычно</text>
+    <text class="inki" x="62" y="292">держат там, где сторожат ворота.</text>
+    <text class="ink" x="62" y="320" text-decoration="underline">На карте</text>
+  </g>
+  <text class="sm" x="394" y="290">Карточка мысли висит до тапа,</text>
+  <text class="sm" x="394" y="302">копия — во вкладку «Мысли» блокнота.</text>
+</svg>
+
+<h2>4. Сумка открыта (панорама остаётся активной)</h2>
 <svg viewBox="0 0 800 360">
   <rect class="scene" x="0" y="0" width="800" height="360"/>
   <rect x="0" y="272" width="800" height="88" fill="#3A2A20"/>
@@ -64,39 +169,143 @@
   <circle cx="430" cy="140" r="26" fill="none" stroke="#EEE4CF" stroke-width="2"/>
   <rect x="412" y="78" width="36" height="36" rx="4" fill="#C08F45" fill-opacity=".8"/>
   <text class="sm" x="460" y="100">предмет над пальцем (+40 dp), цель обведена</text>
+  <circle class="btn" cx="756" cy="44" r="22"/><use href="#thoughtIcon" x="756" y="48"/>
   <rect class="btn" x="660" y="288" width="56" height="56" rx="6"/><text class="lbl" x="667" y="320">Сумка</text>
   <rect class="btn" x="728" y="288" width="56" height="56" rx="6"/><text class="lbl" x="730" y="320">Блокнот</text>
 </svg>
 
-<h2>3. Экран головоломки (кольца)</h2>
+<h2>5. Экран диалога (субтитры; место под повтор реплики зарезервировано)</h2>
+<svg viewBox="0 0 800 360">
+  <rect class="blur" x="0" y="0" width="800" height="360"/>
+  <text class="sm" x="330" y="40">размытая панорама, затемнение 50 %</text>
+  <!-- top bar -->
+  <rect class="btn" x="16" y="16" width="48" height="48" rx="6"/><text class="lbl" x="33" y="45">‹</text>
+  <text class="sm" x="70" y="34">Закончить разговор (= «Назад»)</text>
+  <rect class="btn" x="660" y="16" width="48" height="48" rx="6"/><text class="lbl" x="676" y="45">☰</text>
+  <text class="sm" x="606" y="78">Журнал реплик</text>
+  <circle class="btn" cx="756" cy="44" r="22"/><use href="#thoughtIcon" x="756" y="48"/>
+  <!-- portraits -->
+  <rect class="portrait" x="24" y="56" width="170" height="210" rx="4"/>
+  <text class="lbl" x="60" y="150">СОБЕСЕДНИК</text>
+  <text class="sm" x="40" y="166">портрет ≤ 85 % высоты,</text>
+  <text class="sm" x="40" y="178">эмоция по полю emotion</text>
+  <rect class="portrait" x="624" y="110" width="140" height="156" rx="4" fill-opacity=".55" transform="translate(0,16)"/>
+  <text class="lbl" x="656" y="190">КЛАРА</text>
+  <text class="sm" x="634" y="206">≤ 60 %, справа, смотрит</text>
+  <text class="sm" x="634" y="218">влево; сейчас молчит —</text>
+  <text class="sm" x="634" y="230">приглушена и ниже на 16 dp</text>
+  <!-- choices -->
+  <rect class="btn" x="250" y="110" width="320" height="40" rx="4"/><text class="lbl" x="262" y="134">1. Где вы были около полуночи?</text>
+  <rect class="btn" x="250" y="156" width="320" height="40" rx="4" opacity=".6"/><text class="lbl" x="262" y="180">2. ✓ Кто ещё ночевал в доме?</text>
+  <rect class="btn" x="250" y="202" width="320" height="40" rx="4"/>
+  <circle cx="270" cy="220" r="6" fill="none" stroke="#EEE4CF" stroke-width="1.5"/><path d="M274 224 l5 5" stroke="#EEE4CF" stroke-width="1.5"/>
+  <text class="lbl" x="286" y="226">Предъявить улику</text>
+  <text class="sm" x="250" y="104">варианты (только когда есть выбор), 56 dp зона</text>
+  <!-- line plate -->
+  <rect x="16" y="268" width="768" height="76" rx="4" fill="#1E2A33" fill-opacity=".92" stroke="#C08F45"/>
+  <rect x="28" y="256" width="96" height="22" rx="3" fill="#24313F" stroke="#C08F45"/>
+  <text class="lbl" x="40" y="271">МАРТА</text>
+  <text class="sm" x="132" y="271">ярлык имени — со стороны говорящего (слева собеседник, справа Клара)</text>
+  <text class="lbl" x="32" y="300" font-size="13">Сорок лет служу в этом доме. Хозяин не уходит, не допив чай.</text>
+  <text class="sm" x="32" y="324">до 3 строк, 18 sp; тап: допечатать / дальше (250 мс защита от двойного тапа)</text>
+  <!-- reserved replay -->
+  <rect class="reserved" x="700" y="282" width="48" height="48" rx="6"/>
+  <text class="sm" x="694" y="340">повтор (позже)</text>
+  <path d="M762 316 l6 6 l6 -6" fill="none" stroke="#EEE4CF" stroke-width="2"/>
+  <text class="sm" x="752" y="300">▾ дальше</text>
+</svg>
+<p>Мысль Клары во время диалога — та же плашка, курсив, ярлык «Клара (мысли)» со значком профиля; портрет собеседника не реагирует. Данные реплики: <code>line_id, speaker_id, emotion, text_ru, text_en, audio_ru, audio_en</code> (аудио пусто до этапа озвучки).</p>
+
+<h2>6. Телефонный разговор и журнал реплик</h2>
+<svg viewBox="0 0 800 360">
+  <rect class="blur" x="0" y="0" width="800" height="360"/>
+  <rect class="btn" x="16" y="16" width="48" height="48" rx="6"/>
+  <path d="M28 46 q12 -16 24 0" fill="none" stroke="#EEE4CF" stroke-width="3"/>
+  <text class="sm" x="70" y="34">Повесить</text>
+  <!-- oval call portrait -->
+  <ellipse cx="150" cy="150" rx="88" ry="104" fill="#3A2A20" stroke="#C08F45" stroke-width="4"/>
+  <path d="M70 130 q20 -6 40 0 t40 0 t40 0 t40 0" fill="none" stroke="#93A6AB" stroke-width="1" opacity=".7"/>
+  <path d="M70 170 q20 -6 40 0 t40 0 t40 0 t40 0" fill="none" stroke="#93A6AB" stroke-width="1" opacity=".7"/>
+  <text class="lbl" x="118" y="154">ХАЛЬД</text>
+  <text class="sm" x="96" y="268">овальная рамка звонка + рябь линии</text>
+  <!-- hand with receiver, Clara first person -->
+  <path class="sleeve" d="M232 268 l30 -60 q22 -8 40 6 l-20 54 z"/>
+  <rect x="262" y="176" width="20" height="44" rx="8" fill="#24313F" stroke="#EEE4CF" transform="rotate(-20 272 198)"/>
+  <text class="sm" x="300" y="212">рука Клары с трубкой (вместо её портрета)</text>
+  <!-- plate -->
+  <rect x="16" y="276" width="440" height="68" rx="4" fill="#1E2A33" fill-opacity=".92" stroke="#C08F45"/>
+  <rect x="28" y="264" width="112" height="22" rx="3" fill="#24313F" stroke="#C08F45"/>
+  <text class="lbl" x="40" y="279">☎ ХАЛЬД</text>
+  <text class="lbl" x="28" y="306">Вест? [треск на линии] Говорите громче.</text>
+  <rect class="reserved" x="396" y="286" width="48" height="48" rx="6"/>
+  <!-- log panel -->
+  <rect x="470" y="0" width="330" height="360" fill="#1E2A33" fill-opacity=".96" stroke="#3a4651"/>
+  <text class="lbl" x="484" y="26" font-size="13">Журнал реплик</text>
+  <rect class="btn" x="736" y="8" width="48" height="48" rx="6"/><text class="lbl" x="754" y="37">×</text>
+  <g>
+    <rect class="portrait" x="484" y="70" width="40" height="40" rx="3"/>
+    <text class="lbl" x="532" y="82">МАРТА</text>
+    <text class="lbl" x="532" y="98">Хозяин не уходит, не допив чай.</text>
+    <rect class="reserved" x="736" y="66" width="48" height="48" rx="6"/>
+    <rect class="portrait" x="484" y="126" width="40" height="40" rx="3"/>
+    <text class="lbl" x="532" y="138">› КЛАРА</text>
+    <text class="lbl" x="532" y="154">Кто ночевал в доме?</text>
+    <use href="#thoughtIcon" x="504" y="214"/>
+    <text class="lbl" x="532" y="196">КЛАРА (мысли)</text>
+    <text class="it" x="532" y="212">Газета с моим снимком.</text>
+    <text class="it" x="532" y="226">Значит, он за мной следил.</text>
+  </g>
+  <text class="sm" x="484" y="300">новые внизу; «›» — выбранный игроком вариант;</text>
+  <text class="sm" x="484" y="312">пунктир справа — место под повтор (после озвучки);</text>
+  <text class="sm" x="484" y="324">хранится текущий разговор + 50 последних реплик</text>
+</svg>
+
+<h2>7. Экран головоломки (кольца)</h2>
 <svg viewBox="0 0 800 360">
   <rect x="0" y="0" width="800" height="360" fill="#3A2A20"/>
   <circle cx="400" cy="170" r="140" fill="none" stroke="#C08F45" stroke-width="40" stroke-opacity=".5"/>
   <circle cx="400" cy="170" r="90" fill="none" stroke="#C08F45" stroke-width="40" stroke-opacity=".7"/>
   <circle cx="400" cy="170" r="40" fill="#C08F45"/>
-  <text class="sm" x="560" y="80">кольцевая зона ≥ 48 dp, шаг 45°, щелчок + 10 мс вибрации</text>
-  <rect class="btn" x="16" y="152" width="48" height="48" rx="6"/><text class="lbl" x="28" y="181">↺</text>
+  <text class="sm" x="560" y="110">кольцевая зона ≥ 48 dp, шаг 45°, щелчок + 10 мс вибрации</text>
+  <rect class="btn" x="16" y="152" width="48" height="48" rx="6"/><text class="lbl" x="34" y="181">↺</text>
   <text class="sm" x="16" y="214">Сброс</text>
   <rect class="btn" x="16" y="288" width="56" height="56" rx="6"/><text class="lbl" x="22" y="320">‹ Назад</text>
-  <rect class="btn" x="728" y="16" width="56" height="56" rx="6"/><text class="lbl" x="732" y="48">Снимок</text>
+  <rect class="btn" x="660" y="16" width="56" height="56" rx="6"/><text class="lbl" x="664" y="48">Снимок</text>
+  <circle class="ring" cx="756" cy="44" r="27"/>
+  <circle class="btn" cx="756" cy="44" r="22"/><use href="#thoughtIcon" x="756" y="48"/>
+  <path d="M767 36 q4 6 0 9 q-4 -3 0 -9 z" fill="#EEE4CF" stroke="#24313F" stroke-width=".8"/>
+  <rect class="zone" x="644" y="8" width="148" height="120"/>
+  <text class="sm" x="600" y="140">угол под «Мысли» и плашки — без важного</text>
   <rect class="btn" x="660" y="288" width="56" height="56" rx="6"/><text class="lbl" x="667" y="320">Сумка</text>
   <rect class="btn" x="728" y="288" width="56" height="56" rx="6"/><text class="lbl" x="730" y="320">Блокнот</text>
   <rect class="zone" x="300" y="304" width="200" height="40"/><text class="sm" x="318" y="328">зона субтитров — без важного</text>
 </svg>
 
-<h2>4. Выбор сложности</h2>
+<h2>8. Выбор сложности</h2>
 <svg viewBox="0 0 800 360">
   <rect class="scene" x="0" y="0" width="800" height="360"/>
   <g>
-    <rect class="paper" x="40" y="40" width="220" height="230" rx="6"/>
-    <text class="ink" x="56" y="70" font-size="14">Лёгкий</text><text class="ink" x="56" y="92">[лампа]</text>
-    <rect class="paper" x="290" y="34" width="220" height="242" rx="6" stroke="#C08F45" stroke-width="4"/>
-    <rect x="296" y="40" width="208" height="230" rx="4" fill="none" stroke="#24313F" stroke-width="1.5"/>
-    <text class="ink" x="306" y="70" font-size="14">Нормальный ✓</text><text class="ink" x="306" y="92">[свеча]</text>
-    <rect class="paper" x="540" y="40" width="220" height="230" rx="6" fill-opacity=".7"/>
-    <text class="ink" x="556" y="70" font-size="14">Сложный</text><text class="ink" x="556" y="92">[луна в облаке]</text>
+    <rect class="paper" x="40" y="30" width="220" height="230" rx="6"/>
+    <text class="ink" x="56" y="58" font-size="14">Лёгкий</text><text class="ink" x="56" y="78">[лампа]</text>
+    <text class="ink" x="56" y="104">Активные предметы подсвечены,</text>
+    <text class="ink" x="56" y="118">важное записывается само,</text>
+    <text class="ink" x="56" y="132">мысли героини всегда</text>
+    <text class="ink" x="56" y="146">подскажут, куда идти.</text>
+    <rect class="paper" x="290" y="24" width="220" height="242" rx="6" stroke="#C08F45" stroke-width="4"/>
+    <rect x="296" y="30" width="208" height="230" rx="4" fill="none" stroke="#24313F" stroke-width="1.5"/>
+    <text class="ink" x="306" y="58" font-size="14">Нормальный ✓</text><text class="ink" x="306" y="78">[свеча]</text>
+    <text class="ink" x="306" y="104">Меньше помощи. Застряли —</text>
+    <text class="ink" x="306" y="118">попросите Клару подумать:</text>
+    <text class="ink" x="306" y="132">мысль придёт через несколько</text>
+    <text class="ink" x="306" y="146">минут, а пока можно искать</text>
+    <text class="ink" x="306" y="160">самим.</text>
+    <rect class="paper" x="540" y="30" width="220" height="230" rx="6" fill-opacity=".7"/>
+    <text class="ink" x="556" y="58" font-size="14">Сложный</text><text class="ink" x="556" y="78">[луна в облаке]</text>
+    <text class="ink" x="556" y="104">Без подсветки и без</text>
+    <text class="ink" x="556" y="118">подсказок. Только вы и улики.</text>
   </g>
-  <text class="lbl" x="40" y="306">Сложность нельзя изменить во время игры. Сменить её можно, только начав заново.</text>
+  <text class="lbl" x="90" y="310">Решения головоломок игра не подсказывает ни на одном уровне.</text>
+  <text class="lbl" x="90" y="328">Сложность нельзя изменить во время игры. Сменить её можно, только начав заново.</text>
   <rect class="btn" x="624" y="288" width="160" height="56" rx="6"/><text class="lbl" x="660" y="320">Начать дело</text>
   <rect class="btn" x="16" y="288" width="56" height="56" rx="6"/><text class="lbl" x="22" y="320">‹ Назад</text>
 </svg>
