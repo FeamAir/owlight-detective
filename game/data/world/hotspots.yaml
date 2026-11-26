@@ -6,7 +6,7 @@ hotspots:
     pos: { yaw: 0, pitch: 5, size_deg: 70 }
     action: { kind: closeup, asset: cu_gate_pillars }
     on_first: { line: DLG-GATE-001, set: [seen.pillars],
-                autosnap: { easy: true }, autocode: { easy: CODE-PILLARS-ORDER } }
+                autosnap: { easy: SNAP-PILLARS }, autocode: { easy: CODE-PILLARS-ORDER } }   # engine: ID снимка вместо true
   - id: HS-GATE-LOCK
     vp: VP-GATE-1
     pos: { yaw: 30, pitch: -5, size_deg: 14 }
@@ -54,7 +54,7 @@ hotspots:
     pos: { yaw: 0, pitch: -10, size_deg: 30 }
     action: { kind: closeup, asset: cu_alley_fountain, subviews: [bowl_owl, bowl_key, bowl_gear, bowl_moon] }
     on_first: { line: DLG-ALLEY-002, set: [seen.fountain_levels],
-                autosnap: { easy: true }, autocode: { easy: CODE-FOUNTAIN-LEVELS } }
+                autosnap: { easy: SNAP-FOUNTAIN }, autocode: { easy: CODE-FOUNTAIN-LEVELS } }   # engine: ID снимка вместо true
   - id: HS-ALLEY-FRONTDOOR
     vp: VP-ALLEY-1
     pos: { yaw: 0, pitch: 8, size_deg: 12 }

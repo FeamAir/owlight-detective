@@ -103,6 +103,7 @@ strings:
   pz.stub.body:          { ru: "Механика описана в docs/levels/slice-01-spec.md (5.x). В этой сборке экран ещё не сделан — можно отметить головоломку решённой кнопкой отладки, чтобы проверить ход среза.", en: "The mechanic is described in docs/levels/slice-01-spec.md (5.x). This build doesn't have the screen yet; use the debug button to mark it solved and test the slice flow." }
   pz.stub.not_ready:     { ru: "Пока не открыто: не выполнены условия ({req}).", en: "Not available yet: requirements not met ({req})." }
   pz.reset:              { ru: "Сброс", en: "Reset" }
+  cu.open_puzzle:       { ru: "Сравнить документы", en: "Compare documents" }
   cu.tap_bowl:           { ru: "Коснитесь чаши, чтобы рассмотреть", en: "Tap a bowl to look closer" }
   cu.fountain.title:     { ru: "Фонтан: чаши", en: "Fountain: bowls" }
   cu.pillars.title:      { ru: "Столбы ворот, слева направо", en: "Gate pillars, left to right" }

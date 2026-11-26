@@ -162,8 +162,8 @@ def check_effects(d: dict, rep: Report, eff: dict | None, where: str) -> None:
     snap = eff.get("autosnap")
     if isinstance(snap, dict):
         for lvl, sid in snap.items():
-            if isinstance(sid, str) and sid not in d["snapshots"]:
-                rep.err(f"{where}: unknown snapshot {sid}")
+            if not isinstance(sid, str) or sid not in d["snapshots"]:
+                rep.err(f"{where}: autosnap.{lvl} must be a snapshot ID, got {sid!r}")
     code = eff.get("autocode")
     if isinstance(code, dict):
         for lvl, cid in code.items():
