@@ -9,6 +9,7 @@ const TEST_FILES := [
 	"res://tests/test_hints.gd",
 	"res://tests/test_content.gd",
 	"res://tests/test_puzzles.gd",
+	"res://tests/test_world.gd",
 ]
 
 

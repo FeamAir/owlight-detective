@@ -2,28 +2,36 @@
 # engine: overlays — слой деталей поверх фона (знаки, цифры, надписи). Рисуется движком,
 #         значения берутся из values/<profile>.yaml по уровню сложности. Фон-картинка их не содержит.
 #         sign: { from: <PZ-ID>.<ключ>, index: N, missing: <что рисовать, если элемента нет> }
+#         kind: wallclock — ходики (рисуются движком; only_if — условие показа)
+# engine: label_key у перехода — подпись метки «куда» (строка в ui/strings.yaml)
+# engine: yaw/pitch/size_deg зон, слоя деталей и меток переходов для точек, отрендеренных из 3D-макета
+#         (game/art_src/slice01_blockout.tscn), переписывает game/tools/render_panos.sh из
+#         world/pano_anchors.yaml; data_build.py падает, если значения разошлись с панорамой.
+#         Сдвинуть зону = сдвинуть предмет в макете и перерендерить (или поправить маркер-якорь там же).
 viewpoints:
   - id: VP-GATE-1
     location: LOC-GATE
     panorama: pan_gate_n1_day
     entry_yaw: 0
     exits:
-      - { to: VP-ALLEY-1, yaw: 0,  pitch: -22, icon: outdoor }
-      - { to: VP-GATE-2,  yaw: 30, pitch: -18, icon: door, gate: GT-P03, on_locked: { open_puzzle: PZ-GATE-01 } }
+      - { to: VP-ALLEY-1, yaw: 0,  pitch: -16, icon: outdoor, label_key: exit.alley }
+      - { to: VP-GATE-2,  yaw: 33.7, pitch: -11.1, icon: door, gate: GT-P03, on_locked: { open_puzzle: PZ-GATE-01 }, label_key: exit.gatehouse }
     hotspots: [HS-GATE-PILLARS, HS-GATE-LOCK, HS-GATE-ROAD]
     patches: [ { id: gatehouse_door_open, when: solved.PZ-GATE-01 } ]
     readability_test: { date: null, missed: [] }
     overlays:
-      - { id: medallion_1, kind: sign, yaw: -30, pitch: 12, size_deg: 6, sign: { from: PZ-GATE-01.pillars, index: 0, missing: lantern } }
-      - { id: medallion_2, kind: sign, yaw: -10, pitch: 14, size_deg: 6, sign: { from: PZ-GATE-01.pillars, index: 1, missing: lantern } }
-      - { id: medallion_3, kind: sign, yaw: 10,  pitch: 14, size_deg: 6, sign: { from: PZ-GATE-01.pillars, index: 2, missing: lantern } }
-      - { id: medallion_4, kind: sign, yaw: 30,  pitch: 12, size_deg: 6, sign: { from: PZ-GATE-01.pillars, index: 3, missing: lantern } }
+      - { id: medallion_1, kind: sign, yaw: 330, pitch: 8.4, size_deg: 5.2, sign: { from: PZ-GATE-01.pillars, index: 0, missing: lantern } }
+      - { id: medallion_2, kind: sign, yaw: 348.5, pitch: 9.5, size_deg: 5.9, sign: { from: PZ-GATE-01.pillars, index: 1, missing: lantern } }
+      - { id: medallion_3, kind: sign, yaw: 11.5,  pitch: 9.5, size_deg: 5.9, sign: { from: PZ-GATE-01.pillars, index: 2, missing: lantern } }
+      - { id: medallion_4, kind: sign, yaw: 30,  pitch: 8.4, size_deg: 5.2, sign: { from: PZ-GATE-01.pillars, index: 3, missing: lantern } }
   - id: VP-GATE-2
     location: LOC-GATE
     panorama: pan_gate_n2_day
     entry_yaw: 0
     first_entry_line: DLG-GATE-004
-    exits: [ { to: VP-GATE-1, yaw: 180, pitch: -18, icon: door } ]
+    exits: [ { to: VP-GATE-1, yaw: 180, pitch: -21, icon: door, label_key: exit.outside } ]
+    overlays:
+      - { id: wallclock, kind: wallclock, yaw: 104.4, pitch: 15.3, size_deg: 11.6, only_if: difficulty.hard }
     hotspots: [HS-GATE-KEYBOX, HS-GATE-WEATHERREC, HS-GATE-WEATHERLOG, HS-GATE-RECORDER, HS-GATE-WALLCLOCK]
     patches: [ { id: keybox_open_empty_hook, when: solved.PZ-GATE-03 },
                { id: wallclock, when: difficulty.hard } ]
@@ -33,15 +41,25 @@ viewpoints:
     entry_yaw: 0
     first_entry_line: DLG-ALLEY-001
     exits:
-      - { to: VP-GATE-1, yaw: 180, pitch: -22, icon: outdoor }
-      - { to: VP-PIER-1, yaw: 265, pitch: -14, icon: outdoor, first_use_line: DLG-ALLEY-011 }
+      - { to: VP-GATE-1, yaw: 180, pitch: -16.6, icon: outdoor, label_key: exit.to_gate }
+      - { to: VP-PATH-1, yaw: 272.7, pitch: -13.6, icon: outdoor, first_use_line: DLG-ALLEY-011, label_key: exit.to_lake }
     hotspots: [HS-ALLEY-FOUNTAIN, HS-ALLEY-FRONTDOOR, HS-ALLEY-BARREL, HS-ALLEY-TOWERDOOR,
                HS-ALLEY-TERRACE, HS-ALLEY-GARDENGATE, HS-ALLEY-GRAVEL]
     on_enter_once_when: { flag: solved.PZ-PIER-01, line: DLG-ALLEY-010 }
+  # engine: промежуточная точка на тропе к озеру (не в спецификации 3.x): с развилки мостки скрыты склоном
+  #         (библия 6.2), отсюда видно озеро, мостки и сарай — переход вниз понятен. Зон нет, только переходы.
+  - id: VP-PATH-1
+    location: LOC-PIER
+    panorama: pan_path_n1_day
+    entry_yaw: 0
+    exits:
+      - { to: VP-PIER-1,  yaw: 346.7,   pitch: -20.6, icon: outdoor, label_key: exit.pier }
+      - { to: VP-ALLEY-1, yaw: 179.6, pitch: 4.3, icon: outdoor, label_key: exit.to_fountain }
+    hotspots: []
   - id: VP-PIER-1
     location: LOC-PIER
     panorama: pan_pier_n1_day
     entry_yaw: 0
     first_entry_line: DLG-PIER-001
-    exits: [ { to: VP-ALLEY-1, yaw: 175, pitch: -18, icon: outdoor } ]
+    exits: [ { to: VP-PATH-1, yaw: 160.4, pitch: -17.8, icon: outdoor, label_key: exit.up_path } ]
     hotspots: [HS-PIER-SCENE, HS-PIER-SHED]

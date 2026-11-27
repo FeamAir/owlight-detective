@@ -253,6 +253,23 @@ strings:
   vp.VP-GATE-2:          { ru: "Сторожка", en: "Gatehouse" }
   vp.VP-ALLEY-1:         { ru: "Фонтан", en: "Fountain" }
   vp.VP-PIER-1:          { ru: "Мостки", en: "Pier" }
+  vp.VP-PATH-1:          { ru: "Тропа к озеру", en: "Path to the lake" }
+  # подписи меток переходов («куда»)
+  exit.alley:            { ru: "Аллея", en: "Drive" }
+  exit.gatehouse:        { ru: "Сторожка", en: "Gatehouse" }
+  exit.outside:          { ru: "Наружу", en: "Outside" }
+  exit.to_gate:          { ru: "К воротам", en: "To the gate" }
+  exit.to_lake:          { ru: "К озеру", en: "To the lake" }
+  exit.pier:             { ru: "Мостки", en: "Pier" }
+  exit.to_fountain:      { ru: "К фонтану", en: "To the fountain" }
+  exit.up_path:          { ru: "Наверх, к фонтану", en: "Up to the fountain" }
+  # карта зоны
+  hud.map:               { ru: "Карта", en: "Map" }
+  nb.tab.map:            { ru: "Карта", en: "Map" }
+  map.title:             { ru: "Ворота, аллея и озеро", en: "Gate, drive and lake" }
+  map.you_are_here:      { ru: "Вы здесь", en: "You are here" }
+  map.hint:              { ru: "Нажмите на место, где уже были, — сразу перейдёте туда.", en: "Tap a place you have visited to go there at once." }
+  map.not_visited:       { ru: "Ещё не были", en: "Not visited yet" }
   speaker.CLARA:         { ru: "Клара", en: "Clara" }
   speaker.CLARA.thought: { ru: "Клара (мысли)", en: "Clara (thinking)" }
   speaker.MARTHA:        { ru: "Марта", en: "Martha" }

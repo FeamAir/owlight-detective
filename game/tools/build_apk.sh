@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # One-command debug APK build for the owner's phone.
-#   game/tools/build_apk.sh                 data → placeholders → import → tests → export → verify
+#   game/tools/build_apk.sh                 panoramas (if stale) → data → placeholders → import → tests → export → verify
 #   game/tools/build_apk.sh --skip-tests
 #   game/tools/build_apk.sh --force-art     regenerate placeholder art
 #   game/tools/build_apk.sh --armv7         also build a separate APK for old 32-bit phones (armeabi-v7a)
@@ -49,6 +49,10 @@ need "$BUILD_TOOLS/apksigner" "build-tools 36.1.0"
 need "$JAVA_HOME/bin/keytool" "JDK 17"
 need "$HOME/.local/share/godot/export_templates/4.7.2.stable/android_debug.apk" "Godot 4.7.2 export templates"
 echo "Godot $("$GODOT" --version)"
+
+echo "== panoramas from the 3D blockout (committed; re-rendered only if game/art_src changed)"
+"$GAME_DIR/tools/render_panos.sh" --if-stale || {
+  echo "WARNING: could not re-render panoramas (needs xvfb + Mesa); building with the committed ones"; }
 
 echo "== data and placeholder art"
 python3 "$GAME_DIR/tools/data_build.py"

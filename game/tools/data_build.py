@@ -85,6 +85,8 @@ def load_all(rep: Report) -> dict:
         "difficulty_profile": load_yaml("difficulty_profile.yaml"),
         "layouts": load_yaml("puzzles/layouts.yaml") or {},
     }
+    anchors_path = DATA_DIR / "world" / "pano_anchors.yaml"
+    data["pano_anchors"] = load_yaml("world/pano_anchors.yaml") if anchors_path.exists() else {}
     data["nodes"] = by_id(data["progression"]["nodes"], "id", "progression.nodes", rep)
     return data
 
@@ -207,6 +209,10 @@ def check_references(d: dict, rep: Report) -> None:
             check_condition(d, rep, eo, w)
             check_line(d, rep, eo.get("line"), w)
         for ov in vp.get("overlays", []) or []:
+            if "only_if" in ov:
+                check_condition(d, rep, ov["only_if"], f"{w} overlay {ov['id']}")
+            if ov.get("kind") not in ("sign", "wallclock"):
+                rep.err(f"{w}: overlay {ov['id']} unknown kind {ov.get('kind')}")
             sign = ov.get("sign")
             if sign:
                 pz, _, key = sign["from"].partition(".")
@@ -329,6 +335,52 @@ def check_references(d: dict, rep: Report) -> None:
 
 
 # ---------------------------------------------------------------- values
+
+ANCHOR_TOL = 0.5   # degrees
+
+
+def check_pano_anchors(d: dict, rep: Report) -> dict:
+    """Viewpoints rendered from the 3D blockout: every hotspot, overlay and transition mark must have an anchor in
+    world/pano_anchors.yaml and the YAML angles must match it (render_panos.sh rewrites them). Returns the map block
+    for the game (map image, viewpoint positions on it, headings)."""
+    pa = d.get("pano_anchors") or {}
+    vps = pa.get("viewpoints") or {}
+    out_map = {"image": (pa.get("map") or {}).get("image"), "size_px": (pa.get("map") or {}).get("size_px"), "viewpoints": {}}
+
+    def near(a: float, b: float) -> bool:
+        return abs((float(a) - float(b) + 180.0) % 360.0 - 180.0) <= ANCHOR_TOL
+
+    def cmp(where: str, have: dict, anc: dict | None, keys=("yaw", "pitch", "size_deg")) -> None:
+        if anc is None:
+            rep.err(f"{where}: no anchor in pano_anchors.yaml (add a marker to art_src/blockout.gd and re-render)")
+            return
+        for k in keys:
+            if k in have and not near(have[k], anc[k]):
+                rep.err(f"{where}: {k} {have[k]} differs from the 3D scene {anc[k]} (run game/tools/render_panos.sh)")
+
+    for vid, vp in d["viewpoints"].items():
+        e = vps.get(vid)
+        if e is None:
+            continue
+        out_map["viewpoints"][vid] = {"u": e["map"]["u"], "v": e["map"]["v"], "heading": e["heading"]}
+        anc = e.get("anchors") or {}
+        for ex in vp.get("exits", []):
+            cmp(f"viewpoint {vid} exit → {ex['to']}", ex, anc.get(f"exit:{vid}>{ex['to']}"), ("yaw", "pitch"))
+            check_string(d, rep, ex.get("label_key"), f"viewpoint {vid} exit → {ex['to']}")
+        for ov in vp.get("overlays", []) or []:
+            cmp(f"viewpoint {vid} overlay {ov['id']}", ov, anc.get(ov["id"]))
+        for hid in vp.get("hotspots", []):
+            hs = d["hotspots"].get(hid)
+            if hs:
+                cmp(f"hotspot {hid}", hs.get("pos", {}), anc.get(hid))
+    for hid, hs in d["hotspots"].items():
+        for vf in hs.get("visible_from", []) or []:
+            if vf.get("vp") in vps:
+                cmp(f"hotspot {hid} visible_from {vf['vp']}", vf, vps[vf["vp"]].get("anchors", {}).get(hid), ("yaw", "pitch"))
+    if vps and not out_map["image"]:
+        rep.err("pano_anchors.yaml: map.image missing")
+    return out_map
+
 
 def check_gate01_values(d: dict, rep: Report) -> None:
     """Constraints from test-set-01 PZ-GATE-01 'Ограничения для подбора'."""
@@ -592,6 +644,7 @@ def main() -> int:
         print(f"ERROR: cannot load data: {exc}", file=sys.stderr)
         return 1
     check_references(d, rep)
+    d["map"] = check_pano_anchors(d, rep)
     check_gate01_values(d, rep)
     check_puzzle_values(d, rep)
     check_codes_unique(d, rep)
@@ -614,6 +667,7 @@ def main() -> int:
         return 1
     if not args.check:
         del d["nodes"]  # GDScript builds its own index from progression.nodes
+        del d["pano_anchors"]  # the game needs only d["map"]; angles are already in viewpoints/hotspots
         OUT_FILE.parent.mkdir(parents=True, exist_ok=True)
         OUT_FILE.write_text(json.dumps(d, ensure_ascii=False, indent=1), encoding="utf-8")
         if not args.quiet:

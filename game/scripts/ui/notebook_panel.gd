@@ -1,15 +1,20 @@
 class_name NotebookPanel
 extends Overlay
 ## Clara's notebook (дизайн 3.8, spec 7.2): tabs on the left, content on the right.
-## Not in slice build yet: map page, "my notes", highlighting into Codes on normal/hard, compare mode.
+## Map page = the zone map (MapView); tap on a visited place → travel(vp).
+## Not in slice build yet: "my notes", highlighting into Codes on normal/hard, compare mode.
+
+signal travel(vp_id: String)
 
 var _tab := "case"
 var _content: VBoxContainer
+var _scroll: ScrollContainer
+var map_view: MapView
 var _tabs: VBoxContainer
 
 
 func _tab_list() -> Array:
-	var t: Array = ["case", "clues", "docs", "snaps", "codes", "questions"]
+	var t: Array = ["case", "map", "clues", "docs", "snaps", "codes", "questions"]
 	if Game.state.difficulty == "easy":
 		t.append("signs")
 	if Game.state.difficulty != "hard":
@@ -44,6 +49,7 @@ func _ready() -> void:
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	h.add_child(scroll)
+	_scroll = scroll
 	_content = VBoxContainer.new()
 	_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(_content)
@@ -59,6 +65,7 @@ func _select(t: String) -> void:
 	_content.add_child(UiKit.label(Game.t("nb.tab." + t), UiKit.FONT_SUB + 6, UiKit.WALNUT))
 	match t:
 		"case": _case()
+		"map": _map()
 		"clues": _list(Game.state.clues.map(func(id: String) -> String: return _clue_text(id)))
 		"docs": _docs()
 		"snaps": _list(Game.state.snapshots.map(func(id: String) -> String: return Game.t(Game.data.snapshot(id).get("title", id))))
@@ -69,6 +76,15 @@ func _select(t: String) -> void:
 			return "%s — %s" % [Game.line(e["line"]), Game.t("vp." + str(e.get("vp", "")))]))
 		"solved": _solved()
 		"log": _list(Game.state.line_log.map(func(id: String) -> String: return "%s: %s" % [Game.speaker_name(id), Game.line(id)]))
+
+
+func _map() -> void:
+	map_view = MapView.new()
+	map_view.custom_minimum_size = Vector2(0, maxf(360.0, _scroll.size.y - 80.0))
+	map_view.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	map_view.travel.connect(func(vp_id: String) -> void: travel.emit(vp_id))
+	_content.add_child(map_view)
+	_text(Game.t("map.hint"), UiKit.INK.lightened(0.15), UiKit.FONT_UI - 4)
 
 
 func _text(s: String, color: Color = UiKit.INK, size: int = UiKit.FONT_UI) -> void:

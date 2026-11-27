@@ -56,6 +56,20 @@ func sign_def(id: String) -> Dictionary: return _entry("signs", id)
 func line(id: String) -> Dictionary: return _entry("lines", id)
 func node(id: String) -> Dictionary: return nodes_by_id.get(id, {})
 func layout(id: String) -> Dictionary: return raw.get("layouts", {}).get(id, {})
+func map_data() -> Dictionary: return raw.get("map", {})
+func map_vp(id: String) -> Dictionary: return map_data().get("viewpoints", {}).get(id, {})
+
+
+## Same world direction seen from another viewpoint: yaw is relative to the viewpoint's heading
+## (world/pano_anchors.yaml). Viewpoints without a heading keep the yaw as is.
+func carry_yaw(yaw: float, from_vp: String, to_vp: String) -> float:
+	var a := map_vp(from_vp)
+	var b := map_vp(to_vp)
+	if a.is_empty() or b.is_empty():
+		return yaw
+	return PanoMath.wrap_yaw(yaw + float(a["heading"]) - float(b["heading"]))
+
+
 func has_line(id: String) -> bool: return raw.get("lines", {}).has(id)
 func ids(coll: String) -> Array: return raw.get(coll, {}).keys()
 

@@ -78,6 +78,99 @@ func _tap(ctrl: Control, pos: Vector2) -> void:
 	ctrl._gui_input(ev)
 
 
+## Taps the transition mark leading to `to` through the real picker (on its screen position) and waits.
+func _walk(ex: Node, to: String) -> void:
+	var mark: Dictionary = {}
+	for e in ex.pano.exits:
+		if e["to"] == to:
+			mark = e
+	_expect(not mark.is_empty(), "mark to %s at %s" % [to, _g.state.vp])
+	if mark.is_empty():
+		return
+	ex.pano.look_at_angles(float(mark["yaw"]), clampf(float(mark["pitch"]) + 8.0, -40.0, 40.0))
+	await _frames(2)
+	var sp: Dictionary = ex.pano.screen_pos(float(mark["yaw"]), float(mark["pitch"]))
+	var pk: Dictionary = ex.pano.pick(sp["pos"] + Vector2(0, 40))      # on the label plate under the mark
+	_expect(pk["type"] == "exit" and ex._exits[pk["index"]]["to"] == to, "label of the mark to %s is tappable: %s" % [to, str(pk)])
+	ex._on_tapped(pk)
+	await create_timer(1.0).timeout
+	_expect(_g.state.vp == to, "walked to " + to)
+
+
+func _look(ex: Node, name: String, yaws: Array, pitch: float = 0.0) -> void:
+	ex._sub_queue.clear()         # subtitles of the arrival lines would cover the view in the pictures
+	ex._sub_time = 0.001
+	for y in yaws:
+		ex.pano.look_at_angles(float(y), pitch)
+		ex.pano.reset_marks()
+		await _frames(3)
+		await _shot("nav_%s_yaw%03d" % [name, int(y)])
+
+
+## Navigation tour (owner 27.11): every panorama in several directions, marks with labels, place captions,
+## the zone map (button and notebook tab) and fast travel from it.
+func _tour() -> void:
+	var g := _g
+	g.new_game_at("normal", {"vp": "VP-GATE-1"})
+	main._explore(false)
+	await _frames(5)
+	var ex: Node = main._screen
+	ex._show_place("VP-GATE-1")
+	await _frames(10)
+	_expect(ex.place_caption() == g.t("vp.VP-GATE-1"), "place caption on entering: " + ex.place_caption())
+	await _shot("nav_gate1_caption")
+	var gate_mark: Dictionary = ex.pano.exits[1]
+	_expect(gate_mark["label"] == g.t("exit.gatehouse") and gate_mark["locked"], "gatehouse mark: label and lock")
+	_expect(ex.pano.exits[0]["fresh"], "unvisited target → mark glows")
+	await _look(ex, "gate1", [0, 33, 120, 180, 270])
+	await _walk(ex, "VP-ALLEY-1")
+	await _shot("nav_alley1_arrived")
+	await _look(ex, "alley1", [0, 60, 180, 270])
+	await _walk(ex, "VP-PATH-1")
+	await _look(ex, "path1", [0, 90, 200])
+	await _walk(ex, "VP-PIER-1")
+	await _look(ex, "pier1", [0, 160, 300])
+	# map: button on the game screen
+	ex.open_map()
+	await _frames(6)
+	var mp: Node = _find(ex, "MapPanel")
+	_expect(mp != null, "map opens from the game screen")
+	if mp:
+		await _shot("nav_map_pier")
+		var v = mp.view
+		_expect(v.vp_at(v.marker_pos("VP-GATE-1")) == "VP-GATE-1", "visited gate is tappable on the map")
+		_expect(v.vp_at(v.marker_pos("VP-GATE-2")) == "", "not visited gatehouse is not a travel target")
+		_expect("VP-GATE-2" in v.known(), "gatehouse known (a mark leads there)")
+		var ev := InputEventScreenTouch.new()
+		ev.position = v.marker_pos("VP-GATE-1")
+		ev.pressed = false
+		v._gui_input(ev)
+		await create_timer(1.0).timeout
+		_expect(g.state.vp == "VP-GATE-1" and not ex.has_overlay(), "fast travel from the map to the gate")
+		await _shot("nav_after_travel_gate1")
+	# notebook → map tab
+	ex.open_notebook()
+	await _frames(4)
+	var nb: Node = _find(ex, "NotebookPanel")
+	if nb:
+		nb._select("map")
+		await _frames(6)
+		await _shot("nav_notebook_map")
+		_expect(nb.map_view != null and nb.map_view.vp_at(nb.map_view.marker_pos("VP-PIER-1")) == "VP-PIER-1", "notebook map: pier visited")
+		nb.close()
+		await _frames(2)
+	# gatehouse inside, hard: the wall clock is drawn by the game where the hotspot is
+	g.new_game_at("hard", {"vp": "VP-GATE-2", "solved": ["PZ-GATE-01"]})
+	main._explore(false)
+	await _frames(5)
+	ex = main._screen
+	var wc := false
+	for dc in ex.pano.decals:
+		wc = wc or dc.get("kind") == "wallclock"
+	_expect(wc, "hard: wall clock overlay in the gatehouse")
+	await _look(ex, "gate2_hard", [0, 60, 180, 300])
+
+
 func _run() -> void:
 	var g: Node = root.get_node_or_null("Game")
 	_g = g
@@ -158,8 +251,9 @@ func _run() -> void:
 	await _frames(3)
 	_expect(not ex.has_overlay(), "back closes close-up")
 
-	# lock (yaw 30, pitch -5) → code lock screen
-	ex.pano.look_at_angles(30, -5)
+	# lock → code lock screen (angles from the data = from the 3D blockout)
+	var lock_pos: Dictionary = _g.data.hotspot("HS-GATE-LOCK")["pos"]
+	ex.pano.look_at_angles(float(lock_pos["yaw"]), float(lock_pos["pitch"]))
 	await _frames(2)
 	p = ex.pano.pick(ex.pano.size * 0.5)
 	_expect(p["id"] == "HS-GATE-LOCK", "picker finds the lock: %s" % str(p))
@@ -457,6 +551,7 @@ func _run() -> void:
 			await _shot("%s_%s_wrong" % [pz.to_lower().replace("pz-", ""), lvl])
 			scr.close()
 			await _frames(2)
+	await _tour()
 	g.delete_save()
 	print("SMOKE: %d checks failed" % _fail.size())
 	quit(1 if not _fail.is_empty() else 0)

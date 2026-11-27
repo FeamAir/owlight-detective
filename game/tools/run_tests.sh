@@ -20,7 +20,8 @@ fail=0
 run() {   # name, script
   local name="$1" script="$2"
   echo "== $name"
-  if ! "$GODOT" --headless --path "$GAME_DIR" -s "$script" >"$LOG_DIR/$name.log" 2>&1; then
+  # watchdog: a script error inside an awaited UI step would otherwise hang the run
+  if ! timeout 900 "$GODOT" --headless --path "$GAME_DIR" -s "$script" >"$LOG_DIR/$name.log" 2>&1; then
     fail=1
   fi
   # script errors do not change the exit code of the engine — treat them as failures

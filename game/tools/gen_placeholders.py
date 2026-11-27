@@ -275,7 +275,7 @@ def save(img: Image.Image, path: Path):
     img.save(path, optimize=True)
 
 
-GEN_VERSION = 2   # bump when the pictures change: existing placeholders are regenerated
+GEN_VERSION = 3   # bump when the pictures change: existing placeholders are regenerated
 
 
 def main() -> int:
@@ -291,7 +291,14 @@ def main() -> int:
     hss = {v["id"]: v for v in yaml.safe_load((DATA / "world/hotspots.yaml").read_text())["hotspots"]}
     w, h = (2048, 1024) if args.small else (4096, 2048)
     for vp_id, vp in vps.items():
-        save(make_pano(vp_id, vp, hss, w, h), OUT / "pano" / f"{vp['panorama']}.png")
+        ph = OUT / "pano" / f"{vp['panorama']}.png"
+        real = [p for p in (GAME / "assets" / "pano").glob(f"{vp['panorama']}.*") if p.suffix in (".png", ".jpg", ".webp")]
+        if real or vp_id not in SCENES:
+            # the rendered panorama (tools/render_panos.sh) is used; no placeholder → not packed into the APK
+            for f in (ph, ph.with_name(ph.name + ".import")):
+                f.unlink(missing_ok=True)
+            continue
+        save(make_pano(vp_id, vp, hss, w, h), ph)
         print("pano", vp["panorama"])
     size = (1600, 720)
     closeups = {

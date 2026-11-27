@@ -26,6 +26,9 @@ var _bag_btn: Button
 var _nb_btn: Button
 var _exits: Array = []
 var _busy := false
+var _map_btn: Button
+var _place: Label
+var _place_tw: Tween
 
 
 func _ready() -> void:
@@ -70,7 +73,7 @@ func _build_hud() -> void:
 	var menu := _corner_button("≡", Vector2(0, 0), Vector2(32, 24), UiKit.BIG_TAP)
 	menu.pressed.connect(open_pause)
 	_nb_btn = _corner_button(Game.t("hud.notebook"), Vector2(1, 1), Vector2(-32 - 250, -24 - UiKit.BIG_TAP), 250)
-	_nb_btn.pressed.connect(func() -> void: _open(NotebookPanel.new()))
+	_nb_btn.pressed.connect(open_notebook)
 	_bag_btn = _corner_button(Game.t("hud.bag"), Vector2(1, 1), Vector2(-32 - 250 - 16 - 220, -24 - UiKit.BIG_TAP), 220)
 	_bag_btn.pressed.connect(func() -> void: _open(BagPanel.new()))
 	_hint_btn = HintButton.new()
@@ -78,6 +81,20 @@ func _build_hud() -> void:
 	_hint_btn.offset_left = -32 - UiKit.BIG_TAP; _hint_btn.offset_right = -32; _hint_btn.offset_top = 24; _hint_btn.offset_bottom = 24 + UiKit.BIG_TAP
 	_hint_btn.pressed.connect(_on_hint)
 	_hud.add_child(_hint_btn)
+	# zone map (owner 27.11): bottom-left, opposite the bag and the notebook
+	_map_btn = _corner_button(Game.t("hud.map"), Vector2(0, 1), Vector2(32, -24 - UiKit.BIG_TAP), 220)
+	_map_btn.pressed.connect(open_map)
+
+	# place name on entering a viewpoint
+	_place = UiKit.label("", UiKit.FONT_TITLE, UiKit.LAMP)
+	_place.anchor_left = 0.2; _place.anchor_right = 0.8
+	_place.offset_top = 96; _place.offset_bottom = 180
+	_place.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_place.add_theme_color_override("font_outline_color", UiKit.INK)
+	_place.add_theme_constant_override("outline_size", 14)
+	_place.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_place.modulate.a = 0.0
+	_hud.add_child(_place)
 
 	_sub_panel = PanelContainer.new()
 	var sb := StyleBoxFlat.new()
@@ -156,7 +173,30 @@ func start(play_enter_lines: bool) -> void:
 func _load_vp(vp_id: String) -> void:
 	var vp := Game.data.viewpoint(vp_id)
 	pano.set_texture(Game.data.texture("pano", vp.get("panorama", "")))
+	pano.reset_marks()
 	_set_targets(vp_id)
+	_show_place(vp_id)
+
+
+## Short caption with the place name when arriving at a viewpoint.
+func _show_place(vp_id: String) -> void:
+	_place.text = Game.t("vp." + vp_id)
+	# above the tutorial plate (smaller) while it is shown, so neither covers the scene centre
+	var tut: bool = _tut_panel.visible or not Game.state.tutorial.get("done", false)
+	_place.add_theme_font_size_override("font_size", UiKit.FONT_SUB + 8 if tut else UiKit.FONT_TITLE)
+	_place.offset_top = 22.0 if tut else 96.0
+	_place.offset_bottom = _place.offset_top + 84.0
+	if _place_tw:
+		_place_tw.kill()
+	_place.modulate.a = 0.0
+	_place_tw = create_tween()
+	_place_tw.tween_property(_place, "modulate:a", 1.0, 0.35)
+	_place_tw.tween_interval(1.8)
+	_place_tw.tween_property(_place, "modulate:a", 0.0, 0.6)
+
+
+func place_caption() -> String:
+	return _place.text if _place.modulate.a > 0.01 or (_place_tw != null and _place_tw.is_running()) else ""
 
 
 func _set_targets(vp_id: String) -> void:
@@ -173,11 +213,17 @@ func _set_targets(vp_id: String) -> void:
 	var ex_list: Array = []
 	for i in _exits.size():
 		var e: Dictionary = _exits[i]
-		ex_list.append({"index": i, "yaw": float(e["yaw"]), "pitch": float(e.get("pitch", -22.0)), "locked": e["locked"], "icon": e.get("icon", ""), "to": e["to"]})
+		var label := Game.t(e["label_key"]) if e.get("label_key") != null else Game.t("vp." + str(e["to"]))
+		ex_list.append({"index": i, "yaw": float(e["yaw"]), "pitch": float(e.get("pitch", -22.0)), "locked": e["locked"],
+			"icon": e.get("icon", ""), "to": e["to"], "label": label, "fresh": not Game.state.has("vp." + str(e["to"]))})
 	pano.exits = ex_list
 	var decals: Array = []
 	for ov in vp.get("overlays", []):
-		if ov.get("kind") == "sign":
+		if ov.has("only_if") and not Game.state.cond_ok(ov["only_if"]):
+			continue
+		if ov.get("kind") == "wallclock":
+			decals.append({"kind": "wallclock", "sign": "", "yaw": float(ov["yaw"]), "pitch": float(ov["pitch"]), "size_deg": float(ov["size_deg"])})
+		elif ov.get("kind") == "sign":
 			var sg: Dictionary = ov["sign"]
 			var arr: Variant = Game.data.value_path(sg["from"], Game.state.difficulty)
 			var idx := int(sg.get("index", 0))
@@ -197,10 +243,14 @@ func _move_to(vp_id: String, lines: Array) -> void:
 	tw.tween_property(_fade, "color:a", 1.0, FADE)
 	await tw.finished
 	var first := not Game.state.has("vp." + vp_id)
+	var from_vp := Game.state.vp
 	var enter_lines := Interactions.enter_viewpoint(Game.state, vp_id)
 	_load_vp(vp_id)
 	if first:
 		pano.look_at_angles(float(Game.data.viewpoint(vp_id).get("entry_yaw", 0)), 0.0)
+	else:
+		# keep the world direction of the gaze (дизайн 2.4): yaw is relative to each viewpoint's heading
+		pano.look_at_angles(Game.data.carry_yaw(pano.yaw, from_vp, vp_id), 0.0)
 	Game.state.yaw = pano.yaw
 	Game.autosave()
 	var tw2 := create_tween()
@@ -267,6 +317,31 @@ func _handle(res: Dictionary) -> void:
 		"slice_end_confirm":
 			_confirm_end(res)
 	Game.state_changed.emit()
+
+
+# ------------------------------------------------------------ map and notebook
+
+func open_map() -> void:
+	var m := MapPanel.new()
+	m.travel.connect(func(vp_id: String) -> void:
+		m.close()
+		travel_to(vp_id))
+	_open(m)
+
+
+func open_notebook() -> void:
+	var nb := NotebookPanel.new()
+	nb.travel.connect(func(vp_id: String) -> void:
+		nb.close()
+		travel_to(vp_id))
+	_open(nb)
+
+
+## Fast travel from the map: only to visited viewpoints (story-bible 7, дизайн 2.5).
+func travel_to(vp_id: String) -> void:
+	if vp_id == Game.state.vp or not Game.state.has("vp." + vp_id):
+		return
+	_move_to(vp_id, [])
 
 
 func _is_boundary(hs_id: String) -> bool:
