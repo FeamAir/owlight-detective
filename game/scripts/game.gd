@@ -52,6 +52,11 @@ func _notification(what: int) -> void:
 		get_tree().quit()
 
 
+## Owner build with "hotspot outlines" on (main menu → Debug): service captions, outlines, yaw/pitch.
+func debug_overlay_on() -> bool:
+	return debug_build and bool(settings["debug_overlay"])
+
+
 # ------------------------------------------------------------ text helpers
 
 func lang() -> String:

@@ -29,6 +29,7 @@ strings:
   btn.close:             { ru: "Закрыть", en: "Close" }
   btn.restart:           { ru: "Начать заново", en: "Start over" }
   btn.next:              { ru: "Дальше ›", en: "Next ›" }
+  ui.tap_continue:       { ru: "Нажмите, чтобы продолжить ▸", en: "Tap to continue ▸" }
   # --- HUD ---
   hud.bag:               { ru: "Сумка", en: "Bag" }
   hud.notebook:          { ru: "Блокнот", en: "Notebook" }

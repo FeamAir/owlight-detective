@@ -172,3 +172,32 @@ func texture(kind: String, asset_name: String) -> Texture2D:
 	if p == "":
 		return null
 	return load(p) as Texture2D
+
+
+## Service notes about placeholder art («знаки рисует игра», frame codes…) written by tools/gen_placeholders.py
+## to res://assets/placeholder/captions.json. Shown only by the owner's debug overlay, never baked into pictures.
+const PLACEHOLDER_CAPTIONS := "res://assets/placeholder/captions.json"
+var _captions: Variant = null
+
+
+func is_placeholder(kind: String, asset_name: String) -> bool:
+	return texture_path(kind, asset_name).begins_with("res://assets/placeholder/")
+
+
+func debug_caption(kind: String, asset_name: String, prefix: String = "") -> String:
+	if _captions == null:
+		_captions = {}
+		if FileAccess.file_exists(PLACEHOLDER_CAPTIONS):
+			var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PLACEHOLDER_CAPTIONS))
+			if typeof(parsed) == TYPE_DICTIONARY:
+				_captions = parsed
+	var parts: Array = []
+	if prefix != "":
+		parts.append(prefix)
+	parts.append("%s/%s" % [kind, asset_name])
+	if is_placeholder(kind, asset_name):
+		parts.append("ЗАГЛУШКА / PLACEHOLDER")
+		var note := str(_captions.get("%s/%s" % [kind, asset_name], ""))
+		if note != "":
+			parts.append(note)
+	return " · ".join(parts)

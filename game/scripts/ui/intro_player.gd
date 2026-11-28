@@ -10,6 +10,9 @@ signal finished
 var _bg: TextureRect
 var _pano: PanoramaView
 var _owl_layer: Control
+var _debug_label: Label
+var _gate_pano_path := ""
+var frame_id := ""                 # current frame (F1…F6, GATE-DIALOG) — for tests and the debug caption
 
 
 func _ready() -> void:
@@ -30,6 +33,12 @@ func _ready() -> void:
 	_owl_layer.draw.connect(_draw_owl)
 	_owl_layer.visible = false
 	add_child(_owl_layer)
+	# the gate panorama (4096×2048, ~60–75 ms to decode on a desktop CPU, several times more on a phone) is decoded
+	# in the background while the prologue is read, so the switch to the gate dialogue does not stall
+	var gate_vp := Game.data.viewpoint(Game.data.event(Game.data.event("EV-INTRO").get("next", "EV-GATE-DIALOG")).get("background", {}).get("vp", "VP-GATE-1"))
+	_gate_pano_path = Game.data.texture_path("pano", str(gate_vp.get("panorama", "")))
+	if _gate_pano_path != "":
+		ResourceLoader.load_threaded_request(_gate_pano_path)
 	_run()
 
 
@@ -38,31 +47,42 @@ func _run() -> void:
 	for it in intro.get("give_at_start", []):
 		Game.state.give(it)
 	for fr in intro.get("frames", []):
-		_bg.texture = Game.data.texture("intro", fr.get("art", ""))
-		for it in fr.get("give", []):
-			_owl_layer.visible = true
-			_owl_layer.queue_redraw()
+		frame_id = str(fr.get("id", ""))
+		var art := str(fr.get("art", ""))
+		_bg.texture = Game.data.texture("intro", art)
+		_set_debug_caption("intro", art, frame_id)
+		var gives: Array = fr.get("give", [])
+		var lines: Array = fr.get("lines", [])
+		# П-2: the owl's base with its signs stays on screen until ONE tap (owner 28.11: the old second tap on
+		# the same frame without the signs looked like a hang)
+		_owl_layer.visible = not gives.is_empty()
+		_owl_layer.queue_redraw()
+		if not gives.is_empty() or lines.is_empty():
 			await _wait_tap()
-			_owl_layer.visible = false
+		for it in gives:
 			Game.state.give(it)
 		if fr.get("autosnap") != null:
 			Game.state.give(fr["autosnap"])
-		var lines: Array = fr.get("lines", [])
+		_owl_layer.visible = false
 		if not lines.is_empty():
 			var box := DialogueBox.new()
 			add_child(box)
 			box.play(lines, "frame")
 			await box.finished
-		else:
-			await _wait_tap()
 		if fr.get("id") == "F1":
 			Game.state.give("DOC-LETTER")
+	frame_id = "GATE-DIALOG"
+	_set_debug_caption("", "", "")
 	# the gate conversation over the blurred panorama
 	var dlg := Game.data.event(intro.get("next", "EV-GATE-DIALOG"))
 	var vp := Game.data.viewpoint(dlg.get("background", {}).get("vp", "VP-GATE-1"))
 	_bg.visible = false
 	_pano.visible = true
-	_pano.set_texture(Game.data.texture("pano", vp.get("panorama", "")))
+	var pano_path := Game.data.texture_path("pano", str(vp.get("panorama", "")))
+	if pano_path != "" and pano_path == _gate_pano_path:
+		_pano.set_texture(ResourceLoader.load_threaded_get(pano_path) as Texture2D)
+	else:
+		_pano.set_texture(Game.data.texture("pano", vp.get("panorama", "")))
 	_pano.look_at_angles(0, 2)
 	_pano.blur = 0.0025
 	_pano.dim = 0.35
@@ -77,31 +97,35 @@ func _run() -> void:
 	finished.emit()
 
 
+## Tap anywhere on the frame continues (TapCatcher: every event is looked at, the guard tap is not lost).
 func _wait_tap() -> void:
-	var catcher := Control.new()
-	UiKit.full_rect(catcher)
-	catcher.mouse_filter = Control.MOUSE_FILTER_STOP
-	var hint := UiKit.label("▸", 48, UiKit.LAMP)
-	hint.anchor_left = 1.0; hint.anchor_right = 1.0; hint.anchor_top = 1.0; hint.anchor_bottom = 1.0
-	hint.offset_left = -80; hint.offset_top = -80
-	catcher.add_child(hint)
+	var catcher := TapCatcher.new()
 	add_child(catcher)
-	await get_tree().create_timer(0.3).timeout
-	while true:
-		var ev: InputEvent = await _next_input(catcher)
-		if ev is InputEventScreenTouch and ev.pressed:
-			break
+	await catcher.tapped
 	catcher.queue_free()
 
 
-func _next_input(c: Control) -> InputEvent:
-	var got: Array = []
-	var cb := func(ev: InputEvent) -> void: got.append(ev)
-	c.gui_input.connect(cb)
-	while got.is_empty():
-		await get_tree().process_frame
-	c.gui_input.disconnect(cb)
-	return got[0]
+## Owner build with the debug overlay on: what this frame is (frame id, asset, placeholder notes).
+## Never in a normal run — the pictures themselves carry no service captions.
+func _set_debug_caption(kind: String, asset: String, fid: String) -> void:
+	var text := ""
+	if Game.debug_overlay_on() and kind != "":
+		text = Game.data.debug_caption(kind, asset, fid)
+	if text == "":
+		if _debug_label:
+			_debug_label.visible = false
+		return
+	if _debug_label == null:
+		_debug_label = UiKit.label("", UiKit.FONT_UI - 8, Color(1, 1, 0.7))
+		_debug_label.position = Vector2(24, 16)
+		_debug_label.size = Vector2(1100, 40)
+		_debug_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_debug_label.add_theme_color_override("font_outline_color", Color.BLACK)
+		_debug_label.add_theme_constant_override("outline_size", 6)
+		add_child(_debug_label)
+	move_child(_debug_label, -1)
+	_debug_label.text = text
+	_debug_label.visible = true
 
 
 func _draw_owl() -> void:

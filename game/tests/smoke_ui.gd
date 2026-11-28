@@ -7,6 +7,7 @@ extends SceneTree
 var shots_dir := ""
 var main: Control
 var _shot_n := 0
+var _next_n := 0
 var _fail: Array = []
 var _g: Node
 
@@ -57,8 +58,13 @@ func _find(node: Node, cls: String) -> Node:
 func _next(scr: Node) -> void:
 	_expect(scr._done and scr._action != null and scr._action.visible, "%s: Next button after solving" % scr.pz)
 	_expect(scr.card_visible() and scr.card_layout()["fits"], "%s: solved card fits on screen %s" % [scr.pz, str(scr.card_layout())])
-	scr._action.pressed.emit()
+	# «Открыто»: a real tap on an empty spot (not the button) continues, like «Дальше ›» (owner 28.11)
+	await create_timer(0.32).timeout
+	_next_n += 1
+	var p: Vector2 = _screen_points()[[5, 0, 7, 1, 2][_next_n % 5]]   # top edge, corners, left edge — no buttons there
+	await _real_tap(p)
 	await _frames(5)
+	_expect(not is_instance_valid(scr) or scr.is_queued_for_deletion() or not scr.is_inside_tree(), "solved puzzle: a tap at %s continues" % p)
 
 
 func _move(ex: Node, vp: String) -> void:
@@ -95,6 +101,68 @@ func _walk(ex: Node, to: String) -> void:
 	ex._on_tapped(pk)
 	await create_timer(1.0).timeout
 	_expect(_g.state.vp == to, "walked to " + to)
+
+
+## A tap during the short guard after a frame/line appears is not lost: it continues once the guard ends (≤ 0.3 s).
+func _check_guard_taps() -> void:
+	var tc: Control = load("res://scripts/ui/tap_catcher.gd").new()
+	root.add_child(tc)
+	await process_frame
+	_expect(tc.guard <= 0.3, "tap guard ≤ 0.3 s")
+	await _real_tap(root.get_visible_rect().size * 0.5)
+	_expect(not tc.is_done(), "tap during the guard waits for the guard")
+	await create_timer(0.35).timeout
+	_expect(tc.is_done(), "tap during the guard is not lost")
+	tc.queue_free()
+	var box: Control = load("res://scripts/ui/dialogue_box.gd").new()
+	root.add_child(box)
+	box.play(["DLG-INTRO-003", "DLG-INTRO-004"], "frame")
+	box._shown_chars = 1e9
+	await _real_tap(Vector2(10, 10))
+	_expect(box._i == 0, "dialogue: tap during the guard waits")
+	await create_timer(0.3).timeout
+	await _frames(2)
+	_expect(box._i == 1, "dialogue: tap during the guard is not lost (line %d)" % box._i)
+	box.queue_free()
+	await _frames(2)
+
+
+## Centre, four corners, four edge midpoints of the screen (a few px inside).
+func _screen_points() -> Array:
+	var sz: Vector2 = root.get_visible_rect().size
+	var m := 6.0
+	return [sz * 0.5, Vector2(m, m), Vector2(sz.x - m, m), Vector2(m, sz.y - m), Vector2(sz.x - m, sz.y - m),
+		Vector2(sz.x * 0.5, m), Vector2(sz.x * 0.5, sz.y - m), Vector2(m, sz.y * 0.5), Vector2(sz.x - m, sz.y * 0.5)]
+
+
+## Control the GUI routes a touch at `p` to (same hit test as for touches).
+func _hover(p: Vector2) -> Control:
+	var mm := InputEventMouseMotion.new()
+	mm.position = p
+	mm.global_position = p
+	root.push_input(mm, true)
+	return root.gui_get_hovered_control()
+
+
+## A real tap through the viewport, in the Android order: emulated mouse button, then the screen touch.
+func _real_tap(p: Vector2) -> void:
+	for pressed in [true, false]:
+		var mb := InputEventMouseButton.new()
+		mb.button_index = MOUSE_BUTTON_LEFT
+		mb.pressed = pressed
+		mb.position = p
+		mb.global_position = p
+		root.push_input(mb, true)
+		var st := InputEventScreenTouch.new()
+		st.position = p
+		st.pressed = pressed
+		root.push_input(st, true)
+		await process_frame
+
+
+func _intro_sig(intro: Node) -> String:
+	var box: Node = _find(intro, "DialogueBox")
+	return "%s/%s/%d" % [intro.frame_id, str(box.get_instance_id()) if box else "-", box._i if box else -1]
 
 
 func _look(ex: Node, name: String, yaws: Array, pitch: float = 0.0) -> void:
@@ -197,31 +265,57 @@ func _run() -> void:
 	await _frames(5)
 	var intro: Control = main._screen
 	await _shot("intro_letter")
-	# click through the prologue
+	# click through the prologue with REAL input (owner 28.11: П-2 did not react on the phone). Every tap goes
+	# through the viewport GUI in the Android order — emulated mouse button first, then the screen touch — and
+	# on every frame/line a tap in the centre, the corners and on the edges must land on the "continue" layer
+	# (not on a dead or covering node); the actual tap point cycles through those positions.
 	var guard := 0
-	while main._screen == intro and guard < 400:
+	var seen_frames := {}
+	var hinted := false
+	var no_target := 0
+	while main._screen == intro and guard < 200:
 		guard += 1
+		var sig := _intro_sig(intro)
 		var box: Node = _find(intro, "DialogueBox")
+		var target: Control = box if box else _find(intro, "TapCatcher")
+		if target == null:
+			# only between frames (e.g. the 0.6 s un-blur after the gate dialogue) — never a frame waiting for a tap
+			no_target += 1
+			_expect(no_target < 20, "prologue %s: a tap target is on screen" % sig)
+			if no_target >= 20:
+				break
+			await create_timer(0.1).timeout
+			continue
+		no_target = 0
+		seen_frames[intro.frame_id] = true
+		if box == null and not hinted:
+			var hint: Node = target.hint
+			_expect(hint != null and hint.is_visible_in_tree() and hint.text() == g.t("ui.tap_continue"), "frame %s: «tap to continue» hint" % intro.frame_id)
+			await create_timer(float(hint.PULSE_AFTER) + 0.2).timeout
+			_expect(hint.pulsing(), "frame %s: the hint pulses when the player waits" % intro.frame_id)
+			await _shot("intro_frame_hint")
+			hinted = true
+		for p in _screen_points():
+			var hov := _hover(p)
+			var ok: bool = hov != null and (hov == target or target.is_ancestor_of(hov) or hov is Button)
+			_expect(ok, "prologue %s: a tap at %s reaches the continue layer (got %s)" % [sig, p, hov])
+		if box and guard == 20:
+			await _shot("intro_dialogue")
 		if box:
-			if guard == 20:
-				await _shot("intro_dialogue")
-			box._changed_at = -10000
-			box._shown_chars = 1e9
-			box._next()
+			box._shown_chars = 1e9          # the line is fully shown: the tap goes to the next one
+		await _real_tap(_screen_points()[guard % 9])
+		if guard % 4 == 0:
+			# the guard (≤ 0.3 s): an early tap is not lost, it continues right after the guard
+			await _frames(2)
 		else:
-			var catcher: Control = null
-			for c in intro.get_children():
-				if c is Control and c.mouse_filter == Control.MOUSE_FILTER_STOP and c.get_script() == null:
-					catcher = c
-			if catcher:
-				if guard < 12:
-					await _shot("intro_frame")
-				var ev := InputEventScreenTouch.new()
-				ev.pressed = true
-				catcher.gui_input.emit(ev)
+			await create_timer(0.32).timeout
 		await _frames(2)
+		_expect(main._screen != intro or _intro_sig(intro) != sig, "prologue %s: a tap at %s continues" % [sig, _screen_points()[(guard) % 9]])
 		if guard == 60 or guard == 70:
 			await _shot("gate_dialogue")
+	for f in ["F1", "F2", "F3", "F4", "F5", "F6", "GATE-DIALOG"]:
+		_expect(seen_frames.has(f), "prologue frame %s shown and tapped through" % f)
+	await _check_guard_taps()
 	_expect(_is(main._screen, "ExploreScreen"), "prologue finished into the game screen")
 	var st: GameState = g.state
 	_expect(st.inventory.has("IT-OWL") and st.inventory.has("IT-TICKET"), "owl and ticket in bag after prologue")

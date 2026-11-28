@@ -19,7 +19,8 @@ var _plate: PanelContainer
 var _name_tab: PanelContainer
 var _name_label: Label
 var _text: RichTextLabel
-var _more: Label
+var _more: ContinueHint
+var _pending_tap := false          # tap during the guard: not lost, applied when the guard ends
 var _left: TextureRect
 var _right: TextureRect
 var _left_speaker := ""
@@ -54,7 +55,7 @@ func _ready() -> void:
 	sb.border_color = UiKit.BRASS
 	sb.border_width_top = 3
 	sb.set_corner_radius_all(16)
-	sb.content_margin_left = 36; sb.content_margin_right = 140; sb.content_margin_top = 26; sb.content_margin_bottom = 26
+	sb.content_margin_left = 36; sb.content_margin_right = 140; sb.content_margin_top = 26; sb.content_margin_bottom = 40
 	_plate.add_theme_stylebox_override("panel", sb)
 	_plate.anchor_left = 0.0; _plate.anchor_right = 1.0; _plate.anchor_top = 1.0; _plate.anchor_bottom = 1.0
 	_plate.offset_left = 32; _plate.offset_right = -32; _plate.offset_top = -230; _plate.offset_bottom = -24
@@ -78,9 +79,12 @@ func _ready() -> void:
 	_name_tab.add_child(_name_label)
 	add_child(_name_tab)
 
-	_more = UiKit.label("▾", 40, UiKit.LAMP)
+	# «Нажмите, чтобы продолжить ▸» at the bottom edge of the plate / letter (owner 28.11)
+	_more = ContinueHint.new()
 	_more.anchor_left = 1.0; _more.anchor_right = 1.0; _more.anchor_top = 1.0; _more.anchor_bottom = 1.0
-	_more.offset_left = -90; _more.offset_right = -50; _more.offset_top = -90; _more.offset_bottom = -40
+	_more.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_more.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	_more.offset_left = -50; _more.offset_right = -50; _more.offset_top = -34; _more.offset_bottom = -34
 	add_child(_more)
 	# reserved place for "replay line" (появится с озвучкой, решение №11) — 48 dp, hidden
 	_replay_slot = Control.new()
@@ -103,6 +107,7 @@ func _ready() -> void:
 	_letter.add_child(_letter_text)
 	_letter.visible = false
 	add_child(_letter)
+	move_child(_more, -1)              # the hint stays readable over the letter too
 
 
 func play(line_ids: Array, play_mode: String = "portraits") -> void:
@@ -122,6 +127,8 @@ func _next() -> void:
 	var id: String = lines[_i]
 	Game.state.note_line(id)
 	_changed_at = Time.get_ticks_msec()
+	_pending_tap = false
+	_more.restart()
 	var ln := Game.data.line(id)
 	var style := str(ln.get("style", "speech"))
 	var text := UiKit.escape_bb(Game.line(id))
@@ -199,20 +206,27 @@ func _process(delta: float) -> void:
 			_shown_chars = 1e9
 			_text.visible_characters = -1
 	_more.visible = _shown_chars >= 1e8
-	if _more.visible:
-		_more.position.y = get_rect().size.y - 90 + sin(Time.get_ticks_msec() / 200.0) * 4.0
+	if _pending_tap and Time.get_ticks_msec() - _changed_at >= GUARD_MS:
+		_pending_tap = false
+		_advance()
 
 
 func _gui_input(ev: InputEvent) -> void:
 	if ev is InputEventScreenTouch and ev.pressed:
 		accept_event()
 		if Time.get_ticks_msec() - _changed_at < GUARD_MS:
+			_pending_tap = true
 			return
-		if _shown_chars < 1e8:
-			_shown_chars = 1e9
-			_text.visible_characters = -1
-		else:
-			_next()
+		_advance()
+
+
+## Tap anywhere on the dialogue: finish the typing line, or go to the next line.
+func _advance() -> void:
+	if _shown_chars < 1e8:
+		_shown_chars = 1e9
+		_text.visible_characters = -1
+	else:
+		_next()
 
 
 func _open_log() -> void:

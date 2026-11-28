@@ -39,6 +39,15 @@ func _ready() -> void:
 			add_title(Game.t("cu.pillars.title"))
 		"cu_alley_fountain":
 			add_title(Game.t("cu.fountain.title"))
+	if Game.debug_overlay_on():
+		# owner build, debug overlay: which picture this is and its placeholder notes (never in a normal run)
+		var dbg := UiKit.label(Game.data.debug_caption("cu", asset), UiKit.FONT_UI - 8, Color(1, 1, 0.7))
+		dbg.position = Vector2(24, 100)
+		dbg.size = Vector2(1100, 40)
+		dbg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		dbg.add_theme_color_override("font_outline_color", Color.BLACK)
+		dbg.add_theme_constant_override("outline_size", 6)
+		add_child(dbg)
 	add_back_button()
 	if puzzle != "":
 		var b := UiKit.button("› " + Game.t("cu.open_puzzle"), 420, true)

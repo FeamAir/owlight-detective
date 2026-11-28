@@ -231,7 +231,7 @@ func _set_targets(vp_id: String) -> void:
 			decals.append({"sign": sign_id, "yaw": float(ov["yaw"]), "pitch": float(ov["pitch"]), "size_deg": float(ov["size_deg"])})
 	pano.decals = decals
 	pano.shimmer = Game.data.difficulty_profile(Game.state.difficulty).get("highlight") == "shimmer"
-	pano.show_debug = Game.debug_build and bool(Game.settings["debug_overlay"])
+	pano.show_debug = Game.debug_overlay_on()
 
 
 func _move_to(vp_id: String, lines: Array) -> void:

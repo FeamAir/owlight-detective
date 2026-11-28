@@ -193,7 +193,18 @@ func finish(title_key: String = "pz.solved_generic") -> void:
 	show_card(Game.t(title_key), PuzzleRules.logic_text(pz, level(), Game.lang(), Game.data), UiKit.IVORY)
 	if _action:
 		_action.visible = false
-	var cont := add_action_button(Game.t("btn.next"), 280)
-	cont.pressed.connect(func() -> void:
+	# «Открыто»: a tap anywhere continues, same as «Дальше ›» (owner 28.11); the buttons stay above the catcher
+	var catcher := TapCatcher.new()
+	catcher.show_hint = false          # the «Дальше ›» button is the visible cue here
+	add_child(catcher)
+	var go := func() -> void:
+		if is_queued_for_deletion():
+			return
 		solved.emit(pz)
-		close())
+		close()
+	catcher.tapped.connect(go)
+	var cont := add_action_button(Game.t("btn.next"), 280)
+	cont.pressed.connect(go)
+	if _back:
+		move_child(_back, -1)
+	move_child(_card, -1)
